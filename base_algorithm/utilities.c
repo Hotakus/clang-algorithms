@@ -25,9 +25,8 @@ void char_swap(char *a, char *b) {
 }
 
 
-ssize_t alpha_find_times(const char *src, const char ch, bool ignore_case) {
-    ssize_t alphabet[26 * 2] = {0};
-    // TODO: realizing ignore_case
-    while (*src) alphabet[*src++ - 'a'] += 1;
-    return alphabet[ch - 'a'];
+ssize_t alpha_find_times(const char *src, const char ch) {
+    ssize_t ascii[128] = {0};
+    while (*src) ascii[*src++ - 'a'] += 1;
+    return ascii[ch - 'a'];
 }
