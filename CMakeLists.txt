@@ -15,4 +15,4 @@ add_executable(codewar_kata_c
         base_algorithm/chain.c
         base_algorithm/chain.h
         base_algorithm/utilities.c
-        base_algorithm/utilities.h)
+        base_algorithm/utilities.h base_algorithm/rand_gen.c base_algorithm/rand_gen.h)
