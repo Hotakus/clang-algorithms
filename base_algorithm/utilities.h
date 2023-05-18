@@ -15,7 +15,10 @@ extern "C" {
 int digits(uint64_t num);
 void num_to_string(char *buf, uint64_t num);
 void char_swap(char *a, char *b);
-ssize_t alpha_find_times(const char *src, const char ch);
+ssize_t alpha_find_times(const char *src, char ch);
+
+char **str_split(const char *src, char sep, int *wn);
+void str_split_free(const char **buf);
 
 #ifdef __cplusplus
 }
