@@ -10,7 +10,7 @@ extern "C" {
 
 
 typedef struct chain_node_t {
-    void *id;
+    char *id;
     void *value;
     void *prev_node;
     void *next_node;
@@ -29,6 +29,7 @@ chain_t *chain_create(char *desc, bool enable_loop);
 void chain_destroy(chain_t *chain);
 
 void chain_append(chain_t *chain, const char *value);
+void chain_insert(chain_t *chain, size_t id);
 chain_node_t *chain_find_by_id(chain_t *chain, const char *id);
 
 void chain_remove_by_id(chain_t *chain, const char *id);

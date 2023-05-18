@@ -1,5 +1,14 @@
 #include <malloc.h>
+#include <stdio.h>
 #include "chain.h"
+#include "rand_gen.h"
+#include "utilities.h"
+
+#define DEBUG 0
+
+
+static chain_node_t *create_node();
+
 
 /**
  * Create a chain
@@ -35,13 +44,48 @@ chain_t *chain_create(char *desc, bool enable_loop) {
     return chain;
 }
 
+
 void chain_destroy(chain_t *chain) {
-    if (chain == NULL) return;
+    if (chain == NULL) {
+#if DEBUG == 0
+        printf("chain_destroy: chain is NULL\n");
+#endif // DEBUG
+        return;
+    }
+
     chain_remove_all(chain);
     free(chain);
 }
 
+
 void chain_remove_all(chain_t *chain) {
+
+}
+
+
+chain_node_t *create_node() {
+
+    chain_node_t *node = (chain_node_t *) malloc(sizeof(chain_node_t));
+    node->prev_node = NULL;
+    node->next_node = NULL;
+    node->value = NULL;
+
+    char *tmp = calloc(11, sizeof(char));
+    num_to_string(tmp, rand_gen(11));
+    node->id = tmp;
+
+    return node;
+}
+
+
+void chain_append(chain_t *chain, const char *value) {
+    if (chain == NULL) {
+#if DEBUG == 0
+        printf("chain_append: chain is NULL\n");
+#endif // DEBUG
+        return;
+    }
+
 
 }
 
