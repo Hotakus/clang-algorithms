@@ -43,11 +43,12 @@ char **str_split(const char *src, char sep, int *wn) {
 
     int cnt = 0;
     while (*src) if (*src++ == ' ') cnt++;
-    cnt += 1;
-    *wn = cnt;
 
-    char **tmp = (char **)malloc(sizeof(char*) * cnt);
-    memset(tmp, 0, sizeof(char*) * cnt);
+    cnt += 1;
+    if (wn) *wn = cnt;
+
+    char **tmp = (char **) malloc(sizeof(char *) * cnt);
+    memset(tmp, 0, sizeof(char *) * cnt);
     char **pt = tmp;
 
     *pt = src2;
