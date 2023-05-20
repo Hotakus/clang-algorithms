@@ -12,7 +12,7 @@ extern "C" {
 #define min(x, y)   ((x) < (y) ? (x) : (y))
 
 
-int digits(uint64_t num);
+uint64_t digits(uint64_t num);
 void num_to_string(char *buf, uint64_t num);
 void char_swap(char *a, char *b);
 ssize_t alpha_find_times(const char *src, char ch);

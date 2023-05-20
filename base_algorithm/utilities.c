@@ -4,8 +4,8 @@
 #include <string.h>
 #include "utilities.h"
 
-int digits(uint64_t num) {
-    int digit = 0;
+uint64_t digits(uint64_t num) {
+    uint64_t digit = 0;
     do {
         num /= 10;
         digit++;
@@ -42,7 +42,7 @@ char **str_split(const char *src, char sep, int *wn) {
     strcpy(src2, src);
 
     int cnt = 0;
-    while (*src) if (*src++ == ' ') cnt++;
+    while (*src) if (*src++ == sep) cnt++;
 
     cnt += 1;
     if (wn) *wn = cnt;
