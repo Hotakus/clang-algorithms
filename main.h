@@ -9,6 +9,7 @@ extern "C" {
 #include "./katas/sum_of_positive.h"
 
 #include "./base_algorithm/utilities.h"
+#include "base_algorithm/sort.h"
 
 #ifdef __cplusplus
 }
