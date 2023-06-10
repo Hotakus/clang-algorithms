@@ -12,10 +12,14 @@ extern "C" {
 #define MIN(x, y)               ((x) < (y) ? (x) : (y))
 #define ARRAY_SIZE(arr)         (sizeof(arr)/sizeof(arr[0]))
 
-uint64_t digits(uint64_t num);
-void num_to_string(char *buf, uint64_t num);
-void char_swap(char *a, char *b);
-ssize_t alpha_find_times(const char *src, char ch);
+
+int digits(long long int num);
+char *num_to_str(long long int num);
+int alpha_find_times(const char *src, char ch);
+
+int str_cmp(const char *s1, const char *s2);
+void str_cpy(char *dest, const char *src);
+int str_len(const char *src);
 
 char **str_split(const char *src, char sep, int *wn);
 void str_split_free(const char **buf);
