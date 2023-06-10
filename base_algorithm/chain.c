@@ -7,30 +7,40 @@
 #define DEBUG 1
 
 
-static chain_node_t *create_node(chain_t *chain);
-static void destroy_node(chain_node_t *node);
-static int get_chain_max_id(chain_t *chain);
-
-chain_node_t *create_node(chain_t *chain) {
+chain_node_t *node_create(chain_t *chain) {
     chain_node_t *node = (chain_node_t *) calloc(1, sizeof(chain_node_t));
+
+    if (node == NULL) {
+#if DEBUG == 1
+        printf("node_create: allocated failed\n");
+#endif
+        return NULL;
+    }
+
     node->prev_node = NULL;
     node->next_node = NULL;
     node->value = NULL;
 
-    chain->chain_length++;
-    node->id = chain->chain_length;
+    chain->length++;
+    node->id = chain->length;
 
     return node;
 }
 
-void destroy_node(chain_node_t *node) {
+
+void node_destroy(chain_node_t *node) {
     if (node == NULL) {
 #if DEBUG == 1
-        printf("destroy_node: node is NULL\n");
+        printf("node_destroy: node is NULL\n");
 #endif // DEBUG
     }
 
+#if DEBUG == 1
+    printf("destroy node id - %zu\n", node->id);
+#endif // DEBUG
+
     free(node);
+    node = NULL;
 }
 
 
@@ -50,13 +60,13 @@ void chain_remove_node_by_id(chain_t *chain, const size_t id) {
 chain_t *chain_create(char *desc) {
     chain_t *chain = (chain_t *) calloc(1, sizeof(chain_t));
 
-    chain->chain_length = 0;  // head and tail
+    chain->length = 0;  // head and tail
     chain->chain_desc = desc;  // chain description (Maybe empty)
     chain->is_loop = false;
 
     // create head and tail nodes.
-    chain->head = create_node(chain);
-    chain->tail = create_node(chain);
+    chain->head = node_create(chain);
+    chain->tail = node_create(chain);
 
     chain->head->prev_node = NULL;
     chain->head->next_node = chain->tail;
@@ -77,11 +87,17 @@ void chain_destroy(chain_t *chain) {
 
     chain_remove_all(chain);
     free(chain);
+    chain = NULL;
 }
 
 
 void chain_remove_all(chain_t *chain) {
-
+    chain_node_t *probe = chain->head->next_node;
+    while (probe != chain->tail->next_node) {
+        node_destroy(probe->prev_node);
+        probe = probe->next_node;
+    }
+    node_destroy(chain->tail);
 }
 
 
@@ -98,7 +114,6 @@ void chain_append(chain_t *chain, chain_node_t *node) {
     } else {
         chain->tail->next_node = node;
         node->prev_node = chain->tail;
-        node->next_node = NULL;
         chain->tail = node;
     }
 }
@@ -125,20 +140,15 @@ void chain_poll(chain_t *chain) {
 void chain_test() {
     chain_t *chain = chain_create("First chain");
 
-    chain->tail->value = "hotakus";
-    //printf("%zu | %s\n", chain->tail->id, (char *)chain->tail->value);
 
-    chain_append(chain, create_node(chain));
-    chain->tail->value = "trisuborn";
-    chain_append(chain, create_node(chain));
-    chain->tail->value = "trisuborn2";
+    for (int i = 0; i < 8; ++i) {
+        chain_append(chain, node_create(chain));
+    }
 
     chain_poll(chain);
 
-    printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
-    //printf("%zu\n", chain->tail->id);
-
-    free(chain);
+    // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
+    chain_destroy(chain);
 }
 
 

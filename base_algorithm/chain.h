@@ -16,7 +16,7 @@ typedef struct chain_node_t {
 } chain_node_t;
 
 typedef struct chain_t {
-    size_t chain_length;
+    size_t length;
     char *chain_desc;
     bool is_loop;
 
@@ -29,6 +29,9 @@ chain_t *chain_create(char *desc);
 void chain_destroy(chain_t *chain);
 void chain_poll(chain_t *chain);
 void chain_flush(chain_t *chain);
+
+chain_node_t *node_create(chain_t *chain);
+void node_destroy(chain_node_t *node);
 
 void chain_append(chain_t *chain, chain_node_t *node);
 void chain_node_insert_front(chain_t *chain, size_t id);
