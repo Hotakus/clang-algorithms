@@ -8,9 +8,9 @@
 extern "C" {
 #endif
 
-#define max(x, y)   ((x) > (y) ? (x) : (y))
-#define min(x, y)   ((x) < (y) ? (x) : (y))
-
+#define MAX(x, y)               ((x) > (y) ? (x) : (y))
+#define MIN(x, y)               ((x) < (y) ? (x) : (y))
+#define ARRAY_SIZE(arr)         (sizeof(arr)/sizeof(arr[0]))
 
 uint64_t digits(uint64_t num);
 void num_to_string(char *buf, uint64_t num);
