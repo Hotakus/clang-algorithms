@@ -4,6 +4,12 @@
 #include <string.h>
 #include "utilities.h"
 
+
+/**
+ * 统计十进制数字位数
+ * @param num 待统计的数
+ * @return 位数
+ */
 uint64_t digits(uint64_t num) {
     uint64_t digit = 0;
     do {
@@ -29,12 +35,27 @@ void char_swap(char *a, char *b) {
 }
 
 
+/**
+ * 统计字符串中，特定字符出现的次数
+ *
+ * @param src 待查字符串
+ * @param ch 指定字符
+ * @return 指定字符出现次数
+ */
 ssize_t alpha_find_times(const char *src, const char ch) {
     ssize_t ascii[128] = {0};
     while (*src) ascii[*src++ - 'a'] += 1;
     return ascii[ch - 'a'];
 }
 
+/**
+ * 通过sep，实现对字符串的分割，并返回分割后字符串列表
+ *
+ * @param src 源待处理字符串
+ * @param sep 分隔符
+ * @param wn 词数
+ * @return 处理后的字符串列表
+ */
 char **str_split(const char *src, char sep, int *wn) {
     if (src == NULL) return NULL;
 
