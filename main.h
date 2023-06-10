@@ -11,6 +11,8 @@ extern "C" {
 #include "./base_algorithm/utilities.h"
 #include "base_algorithm/sort.h"
 
+#include "base_algorithm/chain.h"
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus
