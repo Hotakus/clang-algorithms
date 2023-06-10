@@ -7,12 +7,12 @@
 #define DEBUG 1
 
 
-chain_node_t *node_create(chain_t *chain) {
+chain_node_t *node_create(chain_t *chain, const char *name) {
     chain_node_t *node = (chain_node_t *) calloc(1, sizeof(chain_node_t));
 
     if (node == NULL) {
 #if DEBUG == 1
-        printf("node_create: allocated failed\n");
+        printf("%s: allocated failed in %s\n", __FUNCTION__, __FILE__);
 #endif
         return NULL;
     }
@@ -31,7 +31,7 @@ chain_node_t *node_create(chain_t *chain) {
 void node_destroy(chain_node_t *node) {
     if (node == NULL) {
 #if DEBUG == 1
-        printf("node_destroy: node is NULL\n");
+        printf("%s: node is NULL in %s\n", __FUNCTION__, __FILE__);
 #endif // DEBUG
     }
 
@@ -65,8 +65,8 @@ chain_t *chain_create(char *desc) {
     chain->is_loop = false;
 
     // create head and tail nodes.
-    chain->head = node_create(chain);
-    chain->tail = node_create(chain);
+    chain->head = node_create(chain, "");
+    chain->tail = node_create(chain, "");
 
     chain->head->prev_node = NULL;
     chain->head->next_node = chain->tail;
@@ -130,10 +130,18 @@ void chain_poll(chain_t *chain) {
 #if DEBUG == 1
     chain_node_t *probe = chain->head;
     while (probe != chain->tail->next_node) {
-        printf("%zu | %s\n", probe->id, (char *)probe->value);
+        printf("%zu | %s\n", probe->id, (char *) probe->value);
         probe = probe->next_node;
     }
 #endif // DEBUG
+}
+
+
+chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name) {
+    for (size_t i = 0; i < chain->length; ++i) {
+
+    }
+    return NULL;
 }
 
 
@@ -142,7 +150,7 @@ void chain_test() {
 
 
     for (int i = 0; i < 8; ++i) {
-        chain_append(chain, node_create(chain));
+        chain_append(chain, node_create(chain, ""));
     }
 
     chain_poll(chain);
@@ -150,6 +158,3 @@ void chain_test() {
     // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
     chain_destroy(chain);
 }
-
-
-

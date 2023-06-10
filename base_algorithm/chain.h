@@ -10,6 +10,7 @@ extern "C" {
 
 typedef struct chain_node_t {
     size_t id;
+    char *name;
     void *value;
     void *prev_node;
     void *next_node;
@@ -30,12 +31,12 @@ void chain_destroy(chain_t *chain);
 void chain_poll(chain_t *chain);
 void chain_flush(chain_t *chain);
 
-chain_node_t *node_create(chain_t *chain);
+chain_node_t *node_create(chain_t *chain, const char *name);
 void node_destroy(chain_node_t *node);
 
 void chain_append(chain_t *chain, chain_node_t *node);
 void chain_node_insert_front(chain_t *chain, size_t id);
-chain_node_t *chain_find_by_id(chain_t *chain, size_t id);
+chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name);
 
 void chain_remove_node_by_id(chain_t *chain, size_t id);
 void chain_remove_all(chain_t *chain);
