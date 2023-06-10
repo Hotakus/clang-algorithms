@@ -8,9 +8,8 @@
 extern "C" {
 #endif
 
-
 typedef struct chain_node_t {
-    char *id;
+    size_t id;
     void *value;
     void *prev_node;
     void *next_node;
@@ -19,23 +18,28 @@ typedef struct chain_node_t {
 typedef struct chain_t {
     size_t chain_length;
     char *chain_desc;
+    bool is_loop;
 
-    bool chain_is_loop;
     chain_node_t* head;
     chain_node_t* tail;
 } chain_t;
 
-chain_t *chain_create(char *desc, bool enable_loop);
+
+chain_t *chain_create(char *desc);
 void chain_destroy(chain_t *chain);
+void chain_poll(chain_t *chain);
+void chain_flush(chain_t *chain);
 
-void chain_append(chain_t *chain, const char *value);
-void chain_insert(chain_t *chain, size_t id);
-chain_node_t *chain_find_by_id(chain_t *chain, const char *id);
+void chain_append(chain_t *chain, chain_node_t *node);
+void chain_node_insert_front(chain_t *chain, size_t id);
+chain_node_t *chain_find_by_id(chain_t *chain, size_t id);
 
-void chain_remove_by_id(chain_t *chain, const char *id);
+void chain_remove_node_by_id(chain_t *chain, size_t id);
 void chain_remove_all(chain_t *chain);
 void chain_remove_head(chain_t *chain);
 void chain_remove_tail(chain_t *chain);
+
+void chain_test();
 
 #ifdef __cplusplus
 }
