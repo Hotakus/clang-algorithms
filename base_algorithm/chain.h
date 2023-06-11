@@ -44,15 +44,15 @@ void chain_flush(chain_t *chain);
 
 chain_node_t *node_create(chain_t *chain, const char *name);
 void node_destroy(chain_node_t *node);
+void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front);
+void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node);
 
 void chain_append(chain_t *chain, chain_node_t *node);
 void chain_node_insert(chain_t *chain, chain_node_t *node, const char *name, bool front);
 chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name);
 
-void chain_remove_node_by_id(chain_t *chain, size_t id);
+void chain_remove_node_by_name(chain_t *chain, const char *name);
 void chain_remove_all(chain_t *chain);
-void chain_remove_head(chain_t *chain);
-void chain_remove_tail(chain_t *chain);
 
 void chain_test();
 

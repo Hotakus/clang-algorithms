@@ -68,14 +68,6 @@ void node_destroy(chain_node_t *node) {
 }
 
 
-void chain_remove_node_by_id(chain_t *chain, const size_t id) {
-    chain_node_t *probe = chain->head->next_node;
-    while (probe != chain->tail) {
-
-    }
-}
-
-
 /**
  * Create a chain
  * @param desc
@@ -90,7 +82,7 @@ chain_t *chain_create(char *desc) {
 
     // create head and tail nodes.
     chain->head = node_create(chain, "head");
-    chain->tail = node_create(chain, "tail");
+    chain->tail = node_create(chain, "_");
 
     chain->head->prev_node = NULL;
     chain->head->next_node = chain->tail;
@@ -120,21 +112,38 @@ void chain_destroy(chain_t *chain) {
     }
 
     chain_remove_all(chain);
+    node_destroy(chain->head);
+    node_destroy(chain->tail);
     free(chain);
     chain = NULL;
 }
 
 
+/**
+ * remove所有node，不包括头尾
+ * @param chain
+ */
 void chain_remove_all(chain_t *chain) {
-    chain_node_t *probe = chain->head->next_node;
+    if (chain->length == 2) {
+        return;
+    }
+
+    chain_node_t *probe = ((chain_node_t *)chain->head->next_node)->next_node;
     while (probe != chain->tail->next_node) {
         node_destroy(probe->prev_node);
         probe = probe->next_node;
     }
-    node_destroy(chain->tail);
+
+    chain->head->next_node = chain->tail;
+    chain->tail->prev_node = chain->head;
 }
 
 
+/**
+ * append 一个node
+ * @param chain 要操作的链表
+ * @param node 要插入的node
+ */
 void chain_append(chain_t *chain, chain_node_t *node) {
     if (chain == NULL || node == NULL) {
 #if DEBUG == 1
@@ -154,6 +163,12 @@ void chain_append(chain_t *chain, chain_node_t *node) {
 }
 
 
+/**
+ * 根据name在chain中找到node并返回
+ * @param chain 要操作的链表
+ * @param name 要找的node的名字
+ * @return node
+ */
 chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name) {
     chain_node_t *probe = chain->head;
     while (probe != chain->tail->next_node) {
@@ -220,11 +235,68 @@ void chain_poll(chain_t *chain) {
 }
 
 
+/**
+ * 根据node的name从链表移除并销毁
+ * @param chain 要操作的链表
+ * @param name node的名字
+ */
+void chain_remove_node_by_name(chain_t *chain, const char *name) {
+    chain_node_t *node = chain_find_node_by_name(chain, name);
+    chain_node_t *p_node = node->prev_node;
+    chain_node_t *n_node = node->next_node;
+
+    node_connect(p_node, n_node, false);
+
+    node_destroy(node);
+}
+
+
+/**
+ * 将src node连接到dst node的前面或后面
+ * @param dst_node 目标node
+ * @param src_node 源node
+ * @param front 连接到前面还是后面
+ */
+void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front) {
+    if (front) {
+        dst_node->prev_node = src_node;
+        src_node->next_node = dst_node;
+    } else {
+        dst_node->next_node = src_node;
+        src_node->prev_node = dst_node;
+    }
+}
+
+
+
+void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
+    chain_node_t *dst_prev_node = dst_node->prev_node;
+    chain_node_t *dst_next_node = dst_node->next_node;
+
+    chain_node_t *src_prev_node = src_node->prev_node;
+    chain_node_t *src_next_node = src_node->next_node;
+
+
+
+
+}
+
+
+void chain_flush(chain_t *chain) {
+
+}
+
+
 void chain_test() {
     chain_t *chain = chain_create("First chain");
 
-    chain_node_insert(chain, node_create(chain, "tnode"), "tail", true);
-    chain_node_insert(chain, node_create(chain, "tnode2"), "tail", false);
+    chain_node_insert(chain, node_create(chain, "tnode"), "_", true);
+    chain_node_insert(chain, node_create(chain, "tnode2"), "_", false);
+    chain_node_insert(chain, node_create(chain, "tnode3"), "_", false);
+
+    chain_poll(chain);
+
+    chain_remove_node_by_name(chain, "tnode");
 
     chain_poll(chain);
 
