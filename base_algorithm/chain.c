@@ -89,8 +89,8 @@ chain_t *chain_create(char *desc) {
     chain->is_loop = false;
 
     // create head and tail nodes.
-    chain->head = node_create(chain, "");
-    chain->tail = node_create(chain, "");
+    chain->head = node_create(chain, "head");
+    chain->tail = node_create(chain, "tail");
 
     chain->head->prev_node = NULL;
     chain->head->next_node = chain->tail;
@@ -143,6 +143,7 @@ void chain_append(chain_t *chain, chain_node_t *node) {
         return;
     }
 
+    // TODO: change tail name;
     if (chain->is_loop) {
         // TODO: is loop
     } else {
@@ -150,24 +151,6 @@ void chain_append(chain_t *chain, chain_node_t *node) {
         node->prev_node = chain->tail;
         chain->tail = node;
     }
-}
-
-
-void chain_poll(chain_t *chain) {
-    if (chain->head == chain->tail) {
-#if DEBUG == 1
-        printf("chain_poll: only one chain is exists\n");
-#endif // DEBUG
-        return;
-    }
-
-#if DEBUG == 1
-    chain_node_t *probe = chain->head;
-    while (probe != chain->tail->next_node) {
-        printf("%zu | %s\n", probe->id, (char *) probe->value);
-        probe = probe->next_node;
-    }
-#endif // DEBUG
 }
 
 
@@ -184,13 +167,64 @@ chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name) {
 }
 
 
+/**
+ * 将node插入chain的指定位置
+ * @param chain 要操作的链表
+ * @param node 要插入的node
+ * @param name 要插入哪个node，这是要插入node的名字
+ * @param front 如果true，则插入前面。如果false，则插入后面
+ */
+void chain_node_insert(chain_t *chain, chain_node_t *node, const char *name, bool front) {
+    chain_node_t *dst = chain_find_node_by_name(chain, name);
+    chain_node_t *dst_delta = NULL;
+
+    if (front) {
+        dst_delta = dst->prev_node;
+        dst_delta->next_node = node;
+
+        node->prev_node = dst_delta;
+        node->next_node = dst;
+
+        dst->prev_node = node;
+    } else {
+        if (dst == chain->tail) {
+            chain_append(chain, node);
+            return;
+        }
+        dst_delta = dst->next_node;
+        dst_delta->prev_node = node;
+
+        node->next_node = dst_delta;
+        node->prev_node = dst;
+
+        dst->next_node = node;
+    }
+}
+
+
+void chain_poll(chain_t *chain) {
+    if (chain->head == chain->tail) {
+#if DEBUG == 1
+        printf("chain_poll: only one chain is exists\n");
+#endif // DEBUG
+        return;
+    }
+
+#if DEBUG == 1
+    chain_node_t *probe = chain->head;
+    while (probe != chain->tail->next_node) {
+        printf("%s \t %zu \t %s \n", probe->name, probe->id, (char *) probe->value);
+        probe = probe->next_node;
+    }
+#endif // DEBUG
+}
+
+
 void chain_test() {
     chain_t *chain = chain_create("First chain");
 
-
-    for (int i = 0; i < 2; ++i) {
-        chain_append(chain, node_create(chain, ""));
-    }
+    chain_node_insert(chain, node_create(chain, "tnode"), "tail", true);
+    chain_node_insert(chain, node_create(chain, "tnode2"), "tail", false);
 
     chain_poll(chain);
 
