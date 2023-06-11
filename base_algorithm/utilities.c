@@ -3,7 +3,9 @@
 
 #define DEBUG 1
 #if DEBUG == 1
+
 #include <stdio.h>
+
 #endif
 
 /**
@@ -140,8 +142,9 @@ char **str_split(const char *src, char sep, int *wn) {
     return tmp;
 }
 
-void str_split_free(const char **buf) {
-
+void str_split_free(char **buf) {
+    free((void *) &buf[0][0]);
+    free(buf);
 }
 
 

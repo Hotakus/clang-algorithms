@@ -22,7 +22,7 @@ void str_cpy(char *dest, const char *src);
 int str_len(const char *src);
 
 char **str_split(const char *src, char sep, int *wn);
-void str_split_free(const char **buf);
+void str_split_free(char **buf);
 
 #ifdef __cplusplus
 }
