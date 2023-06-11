@@ -4,13 +4,19 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define CHAIN_USE_SEM 0
+
+#if CHAIN_USE_SEM == 1
+#include <semaphore.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct chain_node_t {
     size_t id;
-    char *name;
+    const char *name;
     void *value;
     void *prev_node;
     void *next_node;
@@ -19,6 +25,11 @@ typedef struct chain_node_t {
 typedef struct chain_t {
     size_t length;
     char *chain_desc;
+
+#if CHAIN_USE_SEM == 1
+    sem_t *nc_sem;  // node create semaphore
+#endif
+
     bool is_loop;
 
     chain_node_t* head;

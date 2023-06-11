@@ -3,9 +3,7 @@
 
 #define DEBUG 1
 #if DEBUG == 1
-
 #include <stdio.h>
-
 #endif
 
 /**
