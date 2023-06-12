@@ -214,7 +214,7 @@ void chain_node_insert(chain_t *chain, chain_node_t *node, const char *name, boo
 }
 
 
-void chain_poll(chain_t *chain) {
+void chain_poll(chain_t *chain, bool forward) {
     if (chain->head == chain->tail) {
 #if DEBUG == 1
         printf("chain_poll: only one chain is exists\n");
@@ -223,11 +223,22 @@ void chain_poll(chain_t *chain) {
     }
 
 #if DEBUG == 1
-    chain_node_t *probe = chain->head;
-    while (probe != chain->tail->next_node) {
-        printf("%s \t %zu \t %s \n", probe->name, probe->id, (char *) probe->value);
-        probe = probe->next_node;
+    if (forward) {
+        chain_node_t *probe = chain->head;
+        printf("chain_poll: forward\n");
+        while (probe != chain->tail->next_node) {
+            printf("%s \t %zu \t %s \n", probe->name, probe->id, (char *) probe->value);
+            probe = probe->next_node;
+        }
+    } else {
+        chain_node_t *probe = chain->tail;
+        printf("chain_poll: backward\n");
+        while (probe != chain->head->prev_node) {
+            printf("%s \t %zu \t %s \n", probe->name, probe->id, (char *) probe->value);
+            probe = probe->prev_node;
+        }
     }
+
 #endif // DEBUG
 }
 
@@ -291,11 +302,11 @@ void chain_test() {
     chain_node_insert(chain, node_create(chain, "tnode2"), "_", false);
     chain_node_insert(chain, node_create(chain, "tnode3"), "_", false);
 
-    chain_poll(chain);
+    chain_poll(chain, true);
 
     chain_remove_node_by_name(chain, "tnode");
 
-    chain_poll(chain);
+    chain_poll(chain, false);
 
     // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
     chain_destroy(chain);

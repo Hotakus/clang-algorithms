@@ -39,7 +39,7 @@ typedef struct chain_t {
 
 chain_t *chain_create(char *desc);
 void chain_destroy(chain_t *chain);
-void chain_poll(chain_t *chain);
+void chain_poll(chain_t *chain, bool forward);
 void chain_flush(chain_t *chain);
 
 chain_node_t *node_create(chain_t *chain, const char *name);
