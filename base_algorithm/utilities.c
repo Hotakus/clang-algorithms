@@ -1,7 +1,7 @@
+#include "./config.h"
 #include "stdlib.h"
-#include "utilities.h"
+#include "include/utilities.h"
 
-#define DEBUG 1
 #if DEBUG == 1
 #include <stdio.h>
 #endif

@@ -1,5 +1,5 @@
-#include "sort.h"
-#include "utilities.h"
+#include "include/sort.h"
+#include "include/utilities.h"
 
 
 int *bubble_sort_int(int *src, uint64_t len, bool is_descent) {

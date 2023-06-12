@@ -1,9 +1,7 @@
-
+#include "./config.h"
 #include <stdlib.h>
-#include "chain.h"
-#include "utilities.h"
-
-#define DEBUG 1
+#include "include/chain.h"
+#include "include/utilities.h"
 
 #if DEBUG == 1
 #include <stdio.h>

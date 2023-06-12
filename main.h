@@ -8,10 +8,7 @@ extern "C" {
 #include "./katas/find_odd_int.h"
 #include "./katas/sum_of_positive.h"
 
-#include "./base_algorithm/utilities.h"
-#include "base_algorithm/sort.h"
-
-#include "base_algorithm/chain.h"
+#include "base_algorithm/ba.h"
 
 #ifdef __cplusplus
 }
