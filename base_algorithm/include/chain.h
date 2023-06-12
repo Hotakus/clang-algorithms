@@ -4,9 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define CHAIN_USE_SEM 0
+#include "../config.h"
 
-#if CHAIN_USE_SEM == 1
+#if USE_CHAIN_SEM == 1
 #include <semaphore.h>
 #endif
 
@@ -24,9 +24,9 @@ typedef struct chain_node_t {
 
 typedef struct chain_t {
     size_t length;
-    char *chain_desc;
+    char *desc;
 
-#if CHAIN_USE_SEM == 1
+#if USE_CHAIN_SEM == 1
     sem_t *nc_sem;  // node create semaphore
 #endif
 

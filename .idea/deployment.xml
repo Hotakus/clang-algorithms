@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" serverName="tx-ubuntu" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="tx-ubuntu (8f6ddb1e-907c-484e-bcfd-92c5d2e18150)">
+      <paths name="tx-ubuntu">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.MlxR5ASJHu" local="$PROJECT_DIR$" />
+            <mapping deploy="/tmp/codewar_kata_c" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-linux" />

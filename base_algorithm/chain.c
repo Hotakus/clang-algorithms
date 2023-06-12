@@ -1,4 +1,3 @@
-#include "./config.h"
 #include <stdlib.h>
 #include "include/chain.h"
 #include "include/utilities.h"
@@ -7,7 +6,7 @@
 #include <stdio.h>
 #endif
 
-#if CHAIN_USE_SEM == 1
+#if USE_CHAIN_SEM == 1
 #include <semaphore.h>
 #endif
 
@@ -27,7 +26,7 @@ chain_node_t *node_create(chain_t *chain, const char *name) {
     node->next_node = NULL;
     node->value = NULL;
 
-#if CHAIN_USE_SEM == 1
+#if USE_CHAIN_SEM == 1
     int sem_res = sem_wait(chain->nc_sem);
     if (sem_res != 0) {
 #if DEBUG == 1
@@ -42,7 +41,7 @@ chain_node_t *node_create(chain_t *chain, const char *name) {
     chain->length++;
     node->id = chain->length;
 
-#if CHAIN_USE_SEM == 1
+#if USE_CHAIN_SEM == 1
     sem_post(chain->nc_sem);
 #endif
 
@@ -75,7 +74,7 @@ chain_t *chain_create(char *desc) {
     chain_t *chain = (chain_t *) calloc(1, sizeof(chain_t));
 
     chain->length = 0;  // head and tail
-    chain->chain_desc = desc;  // chain description (Maybe empty)
+    chain->desc = desc;  // chain description (Maybe empty)
     chain->is_loop = false;
 
     // create head and tail nodes.
@@ -87,7 +86,7 @@ chain_t *chain_create(char *desc) {
     chain->tail->prev_node = chain->head;
     chain->tail->next_node = NULL;
 
-#if CHAIN_USE_SEM == 1
+#if USE_CHAIN_SEM == 1
     int sem_res = sem_init(chain->nc_sem, 0, 1);
     if (sem_res != 0) {
 #if DEBUG == 1
