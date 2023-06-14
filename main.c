@@ -7,9 +7,6 @@ char *str = "hello world asd x2 21 a !";
 char *str2 = "hello";
 
 int main() {
-//    chain_test();
-
-
-    printf("--- %d\n", digital_root(132189));
+    chain_test();
 
 }

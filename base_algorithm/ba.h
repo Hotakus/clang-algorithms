@@ -8,6 +8,7 @@
 #include "include/sort.h"
 #include "include/dict.h"
 #include "include/utilities.h"
+#include "include/bit.h"
 
 #ifdef __cplusplus
 extern "C" {
