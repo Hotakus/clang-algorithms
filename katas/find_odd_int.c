@@ -1,7 +1,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <memory.h>
-#include "find_odd_int.h"
+#include "include/find_odd_int.h"
 
 typedef struct {
     size_t key;

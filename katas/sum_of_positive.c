@@ -1,4 +1,4 @@
-#include "sum_of_positive.h"
+#include "include/sum_of_positive.h"
 
 int positive_sum(const int *values, size_t count) {
     int sum = 0;

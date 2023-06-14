@@ -238,7 +238,6 @@ void chain_poll(chain_t *chain, bool forward) {
             probe = probe->prev_node;
         }
     }
-
 #endif // DEBUG
 }
 
