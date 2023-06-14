@@ -3,7 +3,9 @@
 #include "include/utilities.h"
 
 #if DEBUG == 1
+
 #include <stdio.h>
+
 #endif
 
 #if USE_CHAIN_SEM == 1
@@ -125,7 +127,7 @@ void chain_remove_all(chain_t *chain) {
         return;
     }
 
-    chain_node_t *probe = ((chain_node_t *)chain->head->next_node)->next_node;
+    chain_node_t *probe = ((chain_node_t *) chain->head->next_node)->next_node;
     while (probe != chain->tail->next_node) {
         node_destroy(probe->prev_node);
         probe = probe->next_node;
@@ -149,6 +151,7 @@ void chain_append(chain_t *chain, chain_node_t *node) {
         return;
     }
 
+    // change tail
     // TODO: change tail name;
     if (chain->is_loop) {
         // TODO: is loop
@@ -222,6 +225,7 @@ void chain_poll(chain_t *chain, bool forward) {
         return;
     }
 
+    // TODO: has loop
 #if DEBUG == 1
     if (forward) {
         chain_node_t *probe = chain->head;
@@ -275,7 +279,6 @@ void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front) {
 }
 
 
-
 void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
     chain_node_t *dst_prev_node = dst_node->prev_node;
     chain_node_t *dst_next_node = dst_node->next_node;
@@ -284,8 +287,39 @@ void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
     chain_node_t *src_next_node = src_node->next_node;
 
 
+}
 
 
+/**
+ * 判断链表是否含环，是否将环断开
+ * @param chain 要操作的链表
+ * @param detach 是否detach
+ * @return 是否含含环，若detach == true，则返回false
+ */
+bool chain_has_loop(chain_t *chain, bool detach) {
+    chain_node_t *slow = chain->head;
+    chain_node_t *fast = chain->head;
+    unsigned char fast_step = 2;  // 步进
+    unsigned char slow_step = 1;
+
+    while (fast->next_node != NULL) {
+        for (unsigned char step = 0; step < fast_step; step += 1)
+            fast = fast->next_node;
+        for (unsigned char step = 0; step < slow_step; step += 1)
+            slow = slow->next_node;
+
+        if (fast == slow) {
+            if (detach) {
+                // TODO: determine junction
+                chain->has_loop = false;
+                // return false;
+            }
+            chain->has_loop = true;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
@@ -303,10 +337,12 @@ void chain_test() {
 
     chain_poll(chain, true);
 
-    chain_remove_node_by_name(chain, "tnode");
+    chain->tail->next_node = chain_find_node_by_name(chain, "_");
 
-    chain_poll(chain, false);
+    printf("chain_has_loop: %d\n", chain_has_loop(chain, false));
+
 
     // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
-    chain_destroy(chain);
+    // chain_destroy(chain);
 }
+

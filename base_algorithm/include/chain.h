@@ -30,7 +30,11 @@ typedef struct chain_t {
     sem_t *nc_sem;  // node create semaphore
 #endif
 
+    // 当前链表是否为环（不是是否包含环，判断是否包含环，用 chain_has_loop 函数）
     bool is_loop;
+
+    // 是否包含环
+    bool has_loop;
 
     chain_node_t* head;
     chain_node_t* tail;
@@ -53,6 +57,9 @@ chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name);
 
 void chain_remove_node_by_name(chain_t *chain, const char *name);
 void chain_remove_all(chain_t *chain);
+
+// extra functions
+bool chain_has_loop(chain_t *chain, bool detach);
 
 void chain_test();
 
