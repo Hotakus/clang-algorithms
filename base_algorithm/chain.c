@@ -3,14 +3,16 @@
 #include "include/utilities.h"
 
 #if DEBUG == 1
-
 #include <stdio.h>
-
 #endif
 
 #if USE_CHAIN_SEM == 1
 #include <semaphore.h>
 #endif
+
+
+void _node_step(chain_node_t *node, int steps, bool forward);
+
 
 chain_node_t *node_create(chain_t *chain, const char *name) {
     chain_node_t *node = (chain_node_t *) calloc(1, sizeof(chain_node_t));
@@ -290,6 +292,19 @@ void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
 }
 
 
+void _node_step(chain_node_t *node, int steps, bool forward) {
+    for (unsigned char step = 0; step < steps; step += 1) {
+        if (node->next_node == NULL)
+            return;
+
+        if (forward)
+            node = node->next_node;
+        else
+            node = node->prev_node;
+    }
+}
+
+
 /**
  * 判断链表是否含环，是否将环断开
  * @param chain 要操作的链表
@@ -303,10 +318,8 @@ bool chain_has_loop(chain_t *chain, bool detach) {
     unsigned char slow_step = 1;
 
     while (fast->next_node != NULL) {
-        for (unsigned char step = 0; step < fast_step; step += 1)
-            fast = fast->next_node;
-        for (unsigned char step = 0; step < slow_step; step += 1)
-            slow = slow->next_node;
+        _node_step(fast, fast_step, true);
+        _node_step(slow, slow_step, true);
 
         if (fast == slow) {
             if (detach) {
