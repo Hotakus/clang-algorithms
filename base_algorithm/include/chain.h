@@ -25,6 +25,7 @@ typedef struct chain_node_t {
 typedef struct {
     size_t length;
     chain_node_t *junction_node;
+    chain_node_t *end_node;
 } chain_loop_info_t;
 
 
@@ -69,6 +70,7 @@ void chain_remove_all(chain_t *chain);
 bool chain_has_loop(chain_t *chain, bool detach);
 chain_node_t *determine_junction_node(chain_t *chain, chain_node_t *collision_node);
 int chain_loop_length(chain_t *chain, chain_node_t *collision_node);
+chain_node_t *get_loop_end_node(chain_t *chain);
 
 void chain_test();
 

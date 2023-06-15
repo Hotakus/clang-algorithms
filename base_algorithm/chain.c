@@ -113,7 +113,6 @@ chain_t *chain_create(char *desc) {
 }
 
 
-// TODO: loop destroy
 /**
  * 连同链表内的内容，销毁一个链表
  * @param chain
@@ -126,14 +125,16 @@ void chain_destroy(chain_t *chain) {
         return;
     }
 
-    chain_remove_all(chain);
-    node_destroy(chain->head);
-    node_destroy(chain->tail);
-
     if (chain->has_loop) {
+        printf("end :-------- %s\n", chain->loop_info->end_node->name);
+        chain->loop_info->end_node->next_node = NULL;  // 断开环
         free(chain->loop_info);
         chain->loop_info = NULL;
     }
+
+    chain_remove_all(chain);
+    node_destroy(chain->head);
+    node_destroy(chain->tail);
 
     free(chain);
     chain = NULL;
@@ -371,10 +372,12 @@ bool chain_has_loop(chain_t *chain, bool detach) {
 
             chain->has_loop = true;
 
-            if (chain->loop_info == NULL)
+            if (chain->loop_info == NULL) {
                 chain->loop_info = (chain_loop_info_t *) calloc(1, sizeof(chain_loop_info_t));
-            chain->loop_info->length = chain_loop_length(chain, fast);
-            chain->loop_info->junction_node = junction;
+                chain->loop_info->length = chain_loop_length(chain, fast);
+                chain->loop_info->junction_node = junction;
+                chain->loop_info->end_node = get_loop_end_node(chain);
+            }
 
             return true;
         }
@@ -431,6 +434,20 @@ chain_node_t *determine_junction_node(chain_t *chain, chain_node_t *collision_no
 }
 
 
+/**
+ * 获取环的尾部
+ * @param chain 要操作的链表
+ * @return 尾部节点
+ */
+chain_node_t *get_loop_end_node(chain_t *chain) {
+    chain_node_t *head = chain->loop_info->junction_node;
+    chain_node_t *probe = head;
+    while (probe->next_node != head)
+        probe = node_step(probe, 1, true);
+    return probe;
+}
+
+
 void chain_flush(chain_t *chain) {
 
 }
@@ -445,17 +462,15 @@ void chain_test() {
 
     chain_poll(chain, true);
 
-    chain->tail->next_node = chain_find_node_by_name(chain, "test");
+    chain->tail->next_node = chain_find_node_by_name(chain, "_");
 
     chain_has_loop(chain, false);
     printf("chain_has_loop: %d\n", chain->has_loop);
     printf("loop length: %zu\n", chain->loop_info->length);
     printf("junction name: %s\n", chain->loop_info->junction_node->name);
+    printf("end node name: %s\n", get_loop_end_node(chain)->name);
 
 
     // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
-    // chain_destroy(chain);
+    chain_destroy(chain);
 }
-
-
-
