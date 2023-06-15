@@ -10,9 +10,7 @@
 #include <semaphore.h>
 #endif
 
-
-void _node_step(chain_node_t *node, int steps, bool forward);
-
+static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool forward);
 
 chain_node_t *node_create(chain_t *chain, const char *name) {
     chain_node_t *node = (chain_node_t *) calloc(1, sizeof(chain_node_t));
@@ -104,6 +102,7 @@ chain_t *chain_create(char *desc) {
 }
 
 
+// TODO: loop destroy
 void chain_destroy(chain_t *chain) {
     if (chain == NULL) {
 #if DEBUG == 1
@@ -298,16 +297,18 @@ void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
 }
 
 
-void _node_step(chain_node_t *node, int steps, bool forward) {
+static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool forward) {
     for (unsigned char step = 0; step < steps; step += 1) {
         if (node->next_node == NULL)
-            return;
+            return NULL;
 
         if (forward)
             node = node->next_node;
         else
             node = node->prev_node;
     }
+
+    return node;
 }
 
 
@@ -324,8 +325,8 @@ bool chain_has_loop(chain_t *chain, bool detach) {
     unsigned char slow_step = 1;
 
     while (fast->next_node != NULL) {
-        _node_step(fast, fast_step, true);
-        _node_step(slow, slow_step, true);
+        fast = node_step(fast, fast_step, true);
+        slow = node_step(slow, slow_step, true);
 
         if (fast == slow) {
             // TODO: determine junction
@@ -352,9 +353,21 @@ bool chain_has_loop(chain_t *chain, bool detach) {
 
 
 int chain_loop_length(chain_t *chain, chain_node_t *collision_node) {
-    chain_node_t *slow = chain->head;
-    chain_node_t *fast = chain->head;
-    return 0;
+    chain_node_t *slow = collision_node;
+    chain_node_t *fast = collision_node;
+    int cnt = 0;
+
+    while (fast->next_node != NULL) {
+        cnt++;
+
+        fast = node_step(fast, 2, true);
+        slow = node_step(slow, 1, true);
+
+        if (fast == slow)
+            return cnt;
+    }
+
+    return cnt;
 }
 
 
