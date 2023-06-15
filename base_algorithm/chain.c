@@ -362,7 +362,7 @@ bool chain_has_loop(chain_t *chain, bool detach) {
 
         if (fast == slow) {
             // TODO: determine junction
-            chain_node_t *junction = determine_junction_node(chain);
+            chain_node_t *junction = determine_junction_node(chain, fast);
 
             if (detach) {
                 chain->has_loop = false;
@@ -409,7 +409,23 @@ int chain_loop_length(chain_t *chain, chain_node_t *collision_node) {
 }
 
 
-chain_node_t *determine_junction_node(chain_t *chain) {
+/**
+ * 确定连接点位置
+ * @param chain 要操作的链表
+ * @param collision_node 碰撞点
+ * @return 连接点
+ */
+chain_node_t *determine_junction_node(chain_t *chain, chain_node_t *collision_node) {
+    chain_node_t *head = chain->head;
+    chain_node_t *collision = collision_node;
+
+    while(head->next_node != NULL) {
+        head = node_step(head, 1, true);
+        collision = node_step(collision, 1, true);
+        if (head == collision) {
+            return head;
+        }
+    }
 
     return NULL;
 }
@@ -423,15 +439,18 @@ void chain_flush(chain_t *chain) {
 void chain_test() {
     chain_t *chain = chain_create("First chain");
 
-    chain_node_insert(chain, node_create(chain, "tnode"), "_", true);
+    chain_node_insert(chain, node_create(chain, "test"), "_", true);
     chain_node_insert(chain, node_create(chain, "tnode2"), "_", false);
     chain_node_insert(chain, node_create(chain, "tnode3"), "_", false);
 
     chain_poll(chain, true);
 
-    chain->tail->next_node = chain_find_node_by_name(chain, "_");
+    chain->tail->next_node = chain_find_node_by_name(chain, "test");
 
-    printf("chain_has_loop: %d\n", chain_has_loop(chain, false));
+    chain_has_loop(chain, false);
+    printf("chain_has_loop: %d\n", chain->has_loop);
+    printf("loop length: %zu\n", chain->loop_info->length);
+    printf("junction name: %s\n", chain->loop_info->junction_node->name);
 
 
     // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
