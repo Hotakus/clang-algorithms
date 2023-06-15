@@ -6,6 +6,7 @@
 
 // chain
 #define USE_CHAIN_SEM 0
+#define USE_CHAIN_MINI 0
 
 
 #ifdef __cplusplus
