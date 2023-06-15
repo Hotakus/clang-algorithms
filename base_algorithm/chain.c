@@ -12,6 +12,13 @@
 
 static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool forward);
 
+
+/**
+ * 创建一个节点
+ * @param chain 创建节点所基于的链表
+ * @param name 节点名字
+ * @return 一个新节点
+ */
 chain_node_t *node_create(chain_t *chain, const char *name) {
     chain_node_t *node = (chain_node_t *) calloc(1, sizeof(chain_node_t));
 
@@ -51,6 +58,10 @@ chain_node_t *node_create(chain_t *chain, const char *name) {
 }
 
 
+/**
+ * 销毁一个节点
+ * @param node
+ */
 void node_destroy(chain_node_t *node) {
     if (node == NULL) {
 #if DEBUG == 1
@@ -69,8 +80,8 @@ void node_destroy(chain_node_t *node) {
 
 /**
  * Create a chain
- * @param desc
- * @return
+ * @param desc 链表描述，可为空
+ * @return 一个新链表
  */
 chain_t *chain_create(char *desc) {
     chain_t *chain = (chain_t *) calloc(1, sizeof(chain_t));
@@ -103,6 +114,10 @@ chain_t *chain_create(char *desc) {
 
 
 // TODO: loop destroy
+/**
+ * 连同链表内的内容，销毁一个链表
+ * @param chain
+ */
 void chain_destroy(chain_t *chain) {
     if (chain == NULL) {
 #if DEBUG == 1
@@ -224,6 +239,11 @@ void chain_node_insert(chain_t *chain, chain_node_t *node, const char *name, boo
 }
 
 
+/**
+ * 轮询链表
+ * @param chain 要操作的链表
+ * @param forward 轮询方向
+ */
 void chain_poll(chain_t *chain, bool forward) {
     if (chain->head == chain->tail) {
 #if DEBUG == 1
@@ -286,6 +306,11 @@ void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front) {
 }
 
 
+/**
+ * 交换两个节点位置
+ * @param dst_node
+ * @param src_node
+ */
 void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
     chain_node_t *dst_prev_node = dst_node->prev_node;
     chain_node_t *dst_next_node = dst_node->next_node;
@@ -297,6 +322,13 @@ void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
 }
 
 
+/**
+ * 使node进行步进，步进长度为steps
+ * @param node 要操作的节点
+ * @param steps 步进长度
+ * @param forward 步进方向
+ * @return 步进后节点指针
+ */
 static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool forward) {
     for (unsigned char step = 0; step < steps; step += 1) {
         if (node->next_node == NULL)
@@ -352,6 +384,12 @@ bool chain_has_loop(chain_t *chain, bool detach) {
 }
 
 
+/**
+ * loop 的长度
+ * @param chain 要操作的链表
+ * @param collision_node 碰撞点
+ * @return 长度
+ */
 int chain_loop_length(chain_t *chain, chain_node_t *collision_node) {
     chain_node_t *slow = collision_node;
     chain_node_t *fast = collision_node;
