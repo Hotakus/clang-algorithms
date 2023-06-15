@@ -374,7 +374,7 @@ bool chain_has_loop(chain_t *chain, bool detach) {
 
             if (chain->loop_info == NULL) {
                 chain->loop_info = (chain_loop_info_t *) calloc(1, sizeof(chain_loop_info_t));
-                chain->loop_info->length = chain_loop_length(chain, fast);
+                chain->loop_info->length = chain_loop_length(fast);
                 chain->loop_info->junction_node = junction;
                 chain->loop_info->end_node = get_loop_end_node(chain);
             }
@@ -389,11 +389,10 @@ bool chain_has_loop(chain_t *chain, bool detach) {
 
 /**
  * loop 的长度
- * @param chain 要操作的链表
  * @param collision_node 碰撞点
  * @return 长度
  */
-int chain_loop_length(chain_t *chain, chain_node_t *collision_node) {
+int chain_loop_length(chain_node_t *collision_node) {
     chain_node_t *slow = collision_node;
     chain_node_t *fast = collision_node;
     int cnt = 0;

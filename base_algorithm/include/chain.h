@@ -69,7 +69,7 @@ void chain_remove_all(chain_t *chain);
 // extra functions
 bool chain_has_loop(chain_t *chain, bool detach);
 chain_node_t *determine_junction_node(chain_t *chain, chain_node_t *collision_node);
-int chain_loop_length(chain_t *chain, chain_node_t *collision_node);
+int chain_loop_length(chain_node_t *collision_node);
 chain_node_t *get_loop_end_node(chain_t *chain);
 
 void chain_test();
