@@ -115,6 +115,12 @@ void chain_destroy(chain_t *chain) {
     chain_remove_all(chain);
     node_destroy(chain->head);
     node_destroy(chain->tail);
+
+    if (chain->has_loop) {
+        free(chain->loop_info);
+        chain->loop_info = NULL;
+    }
+
     free(chain);
     chain = NULL;
 }
@@ -322,17 +328,39 @@ bool chain_has_loop(chain_t *chain, bool detach) {
         _node_step(slow, slow_step, true);
 
         if (fast == slow) {
+            // TODO: determine junction
+            chain_node_t *junction = determine_junction_node(chain);
+
             if (detach) {
-                // TODO: determine junction
                 chain->has_loop = false;
-                // return false;
+                return false;
             }
+
             chain->has_loop = true;
+
+            if (chain->loop_info == NULL)
+                chain->loop_info = (chain_loop_info_t *) calloc(1, sizeof(chain_loop_info_t));
+            chain->loop_info->length = chain_loop_length(chain, fast);
+            chain->loop_info->junction_node = junction;
+
             return true;
         }
     }
 
     return false;
+}
+
+
+int chain_loop_length(chain_t *chain, chain_node_t *collision_node) {
+    chain_node_t *slow = chain->head;
+    chain_node_t *fast = chain->head;
+    return 0;
+}
+
+
+chain_node_t *determine_junction_node(chain_t *chain) {
+
+    return NULL;
 }
 
 
@@ -358,4 +386,6 @@ void chain_test() {
     // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
     // chain_destroy(chain);
 }
+
+
 
