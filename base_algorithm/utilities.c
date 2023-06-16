@@ -87,6 +87,7 @@ void str_cpy(char *dest, const char *src) {
 #if DEBUG == 1
         printf("%s: dest or src is null.\n", __FUNCTION__);
 #endif
+        return;
     }
 
     while (*src != '\0')
