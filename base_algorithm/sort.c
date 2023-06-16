@@ -31,8 +31,17 @@ char *bubble_sort_char(char *src, bool is_descent) {
     return NULL;
 }
 
-char *bubble_sort_str_arr(char **src, bool is_descent) {
-
+char *bubble_sort_str_arr(char **src, int len, bool is_descent) {
+    if (src == NULL || len == 0) return NULL;
+    for (uint64_t i = 0; i < len - 1; ++i) {
+        for (int k = 0; k < len - i - 1; ++k) {
+            if (is_descent ? (src[k] < src[k + 1]) : src[k] > src[k + 1]) {
+                char *t = src[k];
+                src[k] = src[k + 1];
+                src[k + 1] = t;
+            }
+        }
+    }
     return NULL;
 }
 

@@ -13,7 +13,7 @@ extern "C" {
 // bubble sort function
 int *bubble_sort_int( int *src, uint64_t len, bool is_descent);
 char *bubble_sort_char(char *src, bool is_descent);
-char *bubble_sort_str_arr(char **src, bool is_descent);
+char *bubble_sort_str_arr(char **src, int len, bool is_descent);
 void *bubble_sort_void(void *src, bool is_descent);
 
 #ifdef __cplusplus
