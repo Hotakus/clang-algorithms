@@ -210,7 +210,7 @@ void chain_append(chain_t *chain, chain_node_t *node) {
 chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name) {
     chain_node_t *probe = chain->head;
     while (probe != chain->tail->next_node) {
-        if (str_cmp(probe->name, name) != 0) {
+        if (BA_STRCMP(probe->name, name) != 0) {
             probe = probe->next_node;
             continue;
         }

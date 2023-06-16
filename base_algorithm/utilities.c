@@ -114,8 +114,8 @@ int str_len(const char *src) {
 char **str_split(const char *src, char sep, int *wn) {
     if (src == NULL) return NULL;
 
-    char *src2 = (char *) calloc(str_len(src) + 1, sizeof(char));
-    str_cpy(src2, src);
+    char *src2 = (char *) calloc(BA_STRLEN(src) + 1, sizeof(char));
+    BA_STRCPY(src2, src);
 
     int cnt = 0;
     while (*src) if (*src++ == sep) cnt++;

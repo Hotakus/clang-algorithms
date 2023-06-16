@@ -17,7 +17,7 @@ int *bubble_sort_int(int *src, uint64_t len, bool is_descent) {
 }
 
 char *bubble_sort_char(char *src, bool is_descent) {
-    uint64_t len = str_len(src);
+    uint64_t len = BA_STRLEN(src);
     if (src == NULL || len == 0) return NULL;
     for (uint64_t i = 0; i < len - 1; ++i) {
         for (int k = 0; k < len - i - 1; ++k) {
