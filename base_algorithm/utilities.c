@@ -1,4 +1,5 @@
 #include "stdlib.h"
+#include <math.h>
 #include "include/utilities.h"
 
 #if DEBUG == 1
@@ -10,7 +11,7 @@
  * @param num 待统计的数
  * @return 位数
  */
-int digits(long long int num) {
+int digits_len(long long int num) {
     int digit = 0;
     do {
         num /= 10;
@@ -21,13 +22,28 @@ int digits(long long int num) {
 
 
 /**
+ *
+ * @param num
+ * @return
+ */
+int get_digit(long long int num, unsigned char d) {
+    if (d == 0) {
+        return -1;
+    }
+
+    num /= (int)pow(10, d);
+    return (int)(num % 10);
+}
+
+
+/**
  * 实现
  * @param num
  * @return
  */
 char *num_to_str(long long int num) {
     // TODO: 支持负数
-    int len = digits(num);
+    int len = digits_len(num);
     char *buf = (char *) calloc(len, sizeof(char));
     for (int i = len; i > 0; --i) {
         buf[i - 1] = (char) (num % 10 + 48);
@@ -105,6 +121,22 @@ int str_len(const char *src) {
 
 
 /**
+ * 将 s1 与 s2 进行连接，并返回新的字符串
+ * @param s1 字符串1
+ * @param s2 字符串2
+ * @return 返回连接后的字符串，用完后需要free
+ */
+char *str_conn(char *s1, char *s2) {
+    int s1_len = BA_STRLEN(s1);
+    int s2_len = BA_STRLEN(s2);
+    char *buf = calloc(s1_len + s2_len, sizeof(char));
+    BA_STRCPY(buf, s1);
+    BA_STRCPY(&buf[s1_len], s2);
+    return buf;
+}
+
+
+/**
  * 通过sep，实现对字符串的分割，并返回分割后字符串列表
  *
  * @param src 源待处理字符串
@@ -144,6 +176,3 @@ void str_split_free(char **buf) {
     free((void *) &buf[0][0]);
     free(buf);
 }
-
-
-

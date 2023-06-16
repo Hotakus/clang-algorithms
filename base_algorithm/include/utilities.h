@@ -14,17 +14,25 @@ extern "C" {
 #define MIN(x, y)               ((x) < (y) ? (x) : (y))
 #define ARRAY_SIZE(arr)         (sizeof(arr)/sizeof(arr[0]))
 
-
-int digits(long long int num);
+// alpha and number
+int digits_len(long long int num);
+int get_digit(long long int num, unsigned char d);
 char *num_to_str(long long int num);
 int alpha_find_times(const char *src, char ch);
 
+// str custom
 int str_cmp(const char *s1, const char *s2);
 void str_cpy(char *dest, const char *src);
 int str_len(const char *src);
+char *str_conn(char *s1, char *s2);
 
+// str extra
 char **str_split(const char *src, char sep, int *wn);
 void str_split_free(char **buf);
+
+// miscellaneous
+
+
 
 #ifdef __cplusplus
 }

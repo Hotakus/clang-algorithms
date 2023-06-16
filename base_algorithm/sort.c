@@ -35,7 +35,7 @@ char *bubble_sort_str_arr(char **src, int len, bool is_descent) {
     if (src == NULL || len == 0) return NULL;
     for (uint64_t i = 0; i < len - 1; ++i) {
         for (int k = 0; k < len - i - 1; ++k) {
-            if (is_descent ? (src[k] < src[k + 1]) : src[k] > src[k + 1]) {
+            if (is_descent ? (BA_STRCMP(src[k], src[k + 1]) < 0) : (BA_STRCMP(src[k], src[k + 1]) > 0)) {
                 char *t = src[k];
                 src[k] = src[k + 1];
                 src[k + 1] = t;
