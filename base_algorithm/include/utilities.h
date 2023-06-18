@@ -14,6 +14,8 @@ extern "C" {
 #define MIN(x, y)               ((x) < (y) ? (x) : (y))
 #define ARRAY_SIZE(arr)         (sizeof(arr)/sizeof(arr[0]))
 
+#define IS_TRUE(b)     ((b == true) ? "true" : "false")
+
 // alpha and number
 int digits_len(long long int num);
 int get_digit(long long int num, unsigned char d);
