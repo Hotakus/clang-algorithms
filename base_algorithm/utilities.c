@@ -27,10 +27,6 @@ int digits_len(long long int num) {
  * @return
  */
 int get_digit(long long int num, unsigned char d) {
-    if (d == 0) {
-        return -1;
-    }
-
     num /= (int)pow(10, d);
     return (int)(num % 10);
 }
@@ -157,8 +153,6 @@ char **str_split(const char *src, char sep, int *wn) {
     if (wn) *wn = cnt;
 
     char **tmp = (char **) calloc(cnt, sizeof(char *));
-    /*char **tmp = (char **) malloc(sizeof(char *) * cnt);
-    memset(tmp, 0, sizeof(char *) * cnt);*/
     char **pt = tmp;
 
     *pt = src2;
