@@ -6,6 +6,7 @@
 #include "./include/find_odd_int.h"
 #include "./include/digital_root.h"
 #include "./include/determine_prime.h"
+#include "./include/big_num.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -10,8 +10,8 @@
 extern "C" {
 #endif
 
-#define MAX(x, y)               ((x) > (y) ? (x) : (y))
-#define MIN(x, y)               ((x) < (y) ? (x) : (y))
+#define MAX(x, y)               (((x) > (y)) ? (x) : (y))
+#define MIN(x, y)               (((x) < (y)) ? (x) : (y))
 #define ARRAY_SIZE(arr)         (sizeof(arr)/sizeof(arr[0]))
 
 #define IS_TRUE(b)     ((b == true) ? "true" : "false")
@@ -31,6 +31,7 @@ char *str_conn(char *s1, char *s2);
 // str extra
 char **str_split(const char *src, char sep, int *wn);
 void str_split_free(char **buf);
+char *str_chr(char ch, char *str);
 
 // miscellaneous
 

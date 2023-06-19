@@ -19,11 +19,13 @@
 #define BA_STRCMP(str1, str2)   strcmp(str1, str2)
 #define BA_STRLEN(str)          strlen(str)
 #define BA_STRCPY(dst, src)     strcpy(dst, src)
+#define BA_STRCHR(ch, str)      strchr(ch, str)
 #else
 #include "./include/utilities.h"
 #define BA_STRCMP(str1, str2)   str_cmp(str1, str2)
 #define BA_STRLEN(str)          str_len(str)
 #define BA_STRCPY(dst, src)     str_cpy(dst, src)
+#define BA_STRCHR(ch, str)      str_chr(ch, str)
 #endif
 
 #ifdef __cplusplus
