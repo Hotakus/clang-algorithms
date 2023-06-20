@@ -2,6 +2,7 @@
 #define CODEWAR_KATA_C_CHAIN_H
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include "../config.h"

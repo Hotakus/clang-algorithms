@@ -8,26 +8,7 @@
 
 char *str = "hello world asd x2 21 a !";
 
-char *range_conn(const int *args, int i) {
 
-}
-
-char *range_extraction(const int *args, size_t n)
-{
-    const int *pa = args;
-    int *t = calloc(1, sizeof(char));
-
-    for (int i = 1; i < n; ++i) {
-        if ((args[i-1] + 1) != args[i]) {
-            BA_STRCPY(t, range_conn(pa, i));
-            pa += i;
-        }
-
-    }
-
-
-    return NULL;
-}
 
 int main() {
 
