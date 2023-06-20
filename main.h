@@ -6,7 +6,7 @@
 #include "katas/include/find_odd_int.h"
 #include "katas/include/sum_of_positive.h"
 
-#include "base_algorithm/ba.h"
+#include "basic_algorithm//ba.h"
 #include "katas/katas.h"
 
 

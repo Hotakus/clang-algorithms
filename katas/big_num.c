@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 #include "big_num.h"
-#include "../base_algorithm/ba.h"
+#include "../basic_algorithm//ba.h"
 
 /**
  * 1. determine digits who is bigger.

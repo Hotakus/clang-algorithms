@@ -1,5 +1,5 @@
 #include "digital_root.h"
-#include "../base_algorithm/include/utilities.h"
+#include "../basic_algorithm//include/utilities.h"
 
 int digital_root(int n) {
     int res = 0;

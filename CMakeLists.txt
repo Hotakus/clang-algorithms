@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 23)
 
 aux_source_directory(. SRCS)
 add_subdirectory(katas)
-add_subdirectory(base_algorithm)
+add_subdirectory(basic_algorithm)
 
 
 add_executable(main ${SRCS})
