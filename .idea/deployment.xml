@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="tx-ubuntu" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="tx-ubuntu">
+      <paths name="centos8">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/codewar_kata_c" local="$PROJECT_DIR$" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-linux" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-release" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-minisizerel-linux" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-minsizerel" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-release" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-linux" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-relwithdebinfo" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-minsizerel" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-minisizerel-linux" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-relwithdebinfo" />
-          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="远程主机 (e17902c1-6158-48d9-84c1-7c23be1bfec1)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
         </serverdata>
       </paths>
     </serverData>
