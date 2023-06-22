@@ -28,6 +28,13 @@ char *big_num_add(const char *num1, const char *num2) {
      * 5. if digits len is bigger than old one, then reallocate array.
      */
 
+    // 无值赋零
+    if (num1[0] == NULL) num1 = "0";
+    else if (num2[0] == NULL) num2 = "0";
+
+    num1 = num_trailing_zeros(num1);
+    num2 = num_trailing_zeros(num2);
+
     // TODO: 改进
     unsigned char len_a = BA_STRLEN(num1);
     unsigned char len_b = BA_STRLEN(num2);
@@ -65,6 +72,10 @@ char *big_num_add(const char *num1, const char *num2) {
 
 // TODO: 实现更多大数乘方法
 char *big_num_multiply(const char *num1, const char *num2) {
+
+    // 无值赋零
+    if (num1[0] == NULL) num1 = "0";
+    else if (num2[0] == NULL) num2 = "0";
 
     num1 = num_trailing_zeros(num1);
     num2 = num_trailing_zeros(num2);
