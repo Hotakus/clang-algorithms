@@ -3,22 +3,19 @@
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "main.h"
-#include "katas/include/num_english.h"
 
-char *str = "hello world asd x2 21 a !";
 
-char *num1 = "2147932494985927698";
-char *num2 = "4563946572536906858242340577385731048915170760565411846893621326722513040248395036220022386628493666961285036562184408837411372638446566270946186746521464511";
-char *r = "9803049148531671593126477651568816463503503397281201623676527889628432806027490696192374483901805946696455112302612354581656958191821744280533532017764013272520737446918925678";
-
-char *tz = "00000000";
+char *str1 = "pqmpgtzzfaqftdawjqiurwscy";
+char *str2 = "fevbekrsaanbbsbrzwwbvfsdb";
+char *ex = "2:bbbbbb/1:qqq/2:sss/1:pp/1:tt/1:zz/2:ee/2:rr/2:vv/=:aa/=:ff/=:ww";
 
 int main() {
-    char * res = big_num_multiply(num1, num2);
-
-    BA_STRCMP(res, r);
-    printf("--- %s\n", res);
-
+    char *res = string_mix(str1, str2);
+    printf("ex : %s\n", ex);
+    printf("ac : %s\n", res);
+    printf("%s\n",IS_TRUE(BA_STRCMP(res, ex) == 0));
+    free(res);
     return 0;
 }

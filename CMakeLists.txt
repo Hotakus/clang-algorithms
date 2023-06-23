@@ -4,12 +4,14 @@ project(codewar_kata_c C)
 set(CMAKE_C_STANDARD 11)
 
 aux_source_directory(. SRCS)
+
 add_subdirectory(katas)
 add_subdirectory(basic_algorithm)
-
+add_subdirectory(questions)
 
 add_executable(main ${SRCS})
 
 target_link_libraries(main m)
 target_link_libraries(main hba)
 target_link_libraries(main katas)
+target_link_libraries(main questions)
