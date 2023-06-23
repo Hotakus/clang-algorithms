@@ -1,3 +1,130 @@
+### C++ template
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+### Archive template
+
+### Mostly from https://en.wikipedia.org/wiki/List_of_archive_formats
+
+## Archiving only
+# The traditional archive format on Unix-like systems, now used mainly for the creation of static libraries.
+*.a
+*.ar
+# RPM files consist of metadata concatenated with (usually) a cpio archive. Newer RPM systems also support other archives, as cpio is becoming obsolete. cpio is also used with initramfs.
+*.cpio
+
+# A self-extracting archive that uses the Bourne shell (sh).
+*.shar
+# A system for storing multiple files. LBR archives typically contained files processed by SQ, or the archive itself was compressed with SQ. LBR archives that were compressed with SQ ended with the extension .LQR
+*.LBR
+# An archive format originally used mainly for archiving and distribution of the exact, nearly-exact, or custom-modified contents of an optical storage medium such as a CD-ROM or DVD-ROM. However, it can be used to archive the contents of other storage media, selected partitions, folders, and/or files. The resulting archive is typically optimized for convenient rendering to (re-)writable CD or DVD media.
+*.iso
+# A library format used primarily on the Commodore 64 and 128 lines of computers. This bears no resemblance to the DOS LBR format. While library files were quick to implement (a number of programs exist to work with them) they are crippled in that they cannot grow with use: once a file has been created it cannot be amended (files added, changed or deleted) without recreating the entire file.
+*.lbr
+# An archive format used by Mozilla for storing binary diffs. Used in conjunction with bzip2.
+*.mar
+# A common archive format used on Unix-like systems. Generally used in conjunction with compressors such as gzip, bzip2, compress or xz to create .tar.gz, .tar.bz2, .tar.Z or tar.xz files.
+*.tar
+
+# Package managers
+# Red Hat Package Manager
+*.rpm
+# Debian package
+*.deb
+# MicroSoft Installer
+*.msi
+*.msm
+*.msp
+# Mozilla package installer
+*.xpi
+# Ruby Package
+*.gem
+
+
+### C template
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
 ### CLion template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
@@ -8,10 +135,6 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-
-build/
-lib/
-bin/
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -81,4 +204,8 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-!/lib/
+
+build/
+bin/
+lib*/
+
