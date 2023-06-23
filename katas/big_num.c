@@ -29,8 +29,8 @@ char *big_num_add(const char *num1, const char *num2) {
      */
 
     // 无值赋零
-    if (num1[0] == NULL) num1 = "0";
-    else if (num2[0] == NULL) num2 = "0";
+    if (num1 == NULL) num1 = "0";
+    else if (num2 == NULL) num2 = "0";
 
     num1 = num_trailing_zeros(num1);
     num2 = num_trailing_zeros(num2);
@@ -74,13 +74,13 @@ char *big_num_add(const char *num1, const char *num2) {
 char *big_num_multiply(const char *num1, const char *num2) {
 
     // 无值赋零
-    if (num1[0] == NULL) num1 = "0";
-    else if (num2[0] == NULL) num2 = "0";
+    if (num1 == NULL) num1 = "0";
+    else if (num2 == NULL) num2 = "0";
 
     num1 = num_trailing_zeros(num1);
     num2 = num_trailing_zeros(num2);
 
-    if (num1[0] == NULL || num2[0] == NULL) {
+    if (num1[0] == '0' || num2[0] == '0') {
         char *tmp = calloc(1, 1);
         tmp[0] = '0';
         return tmp;
@@ -139,6 +139,6 @@ void big_num_free(char *num) {
  * @return
  */
 char *num_trailing_zeros(char *num) {
-    while (*num++ == '0' && (num != '\0'));
+    while (*num++ == '0' && (*num != '\0'));
     return --num;
 }
