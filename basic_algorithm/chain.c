@@ -14,6 +14,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "include/chain.h"
 #include "include/utilities.h"
 
@@ -29,6 +30,20 @@ static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool for
 
 static void chain_poll(chain_t *chain, bool forward);
 static chain_node_t *node_create(chain_t *chain, const char *name);
+static void node_destroy(chain_node_t *node);
+static void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front);
+
+static void chain_append(chain_t *chain, chain_node_t *node);
+static void chain_node_insert(chain_t *chain, chain_node_t *node, const char *name, bool front);
+static chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name);
+static void chain_remove_node_by_name(chain_t *chain, const char *name);
+static void chain_remove_all(chain_t *chain);
+
+static bool chain_has_loop(chain_t *chain, bool detach);
+static chain_node_t *get_loop_end_node(chain_t *chain);
+static chain_node_t *determine_junction_node(chain_t *chain, chain_node_t *collision_node);
+static int chain_loop_length(chain_node_t *collision_node);
+
 
 /**
  * 创建一个节点
@@ -118,7 +133,18 @@ chain_t *chain_create(char *desc) {
 
     // default function
     chain->poll = chain_poll;
-    chain->new_node = node_create;
+    chain->node_new = node_create;
+    chain->node_del = node_destroy;
+    chain->node_conn = node_connect;
+    chain->node_swap = NULL;
+    chain->append = chain_append;
+    chain->insert = chain_node_insert;
+    chain->find_node = chain_find_node_by_name;
+    chain->rm_node = chain_remove_node_by_name;
+    chain->rm_all_nodes = chain_remove_all;
+
+    chain->check_loop = chain_has_loop;
+    chain->get_loop_end = get_loop_end_node;
 
 #if USE_CHAIN_SEM == 1
     int sem_res = sem_init(chain->nc_sem, 0, 1);
@@ -473,21 +499,24 @@ void chain_flush(chain_t *chain) {
 void chain_test() {
     chain_t *chain = chain_create("First chain");
 
-    chain_node_insert(chain, chain->new_node(chain, "test"), "_", true);
-    chain_node_insert(chain, chain->new_node(chain, "tnode2"), "_", false);
-    chain_node_insert(chain, chain->new_node(chain, "tnode3"), "_", false);
+    chain->insert(chain, chain->node_new(chain, "test"), "_", true);
+    chain->insert(chain, chain->node_new(chain, "tnode2"), "_", false);
+    chain->insert(chain, chain->node_new(chain, "tnode3"), "_", false);
+
+    for (int i = 0; i < 1000000; ++i) {
+        chain->append(chain, chain->node_new(chain, "t"));
+    }
 
     //chain_poll(chain, true);
-    chain->poll(chain, true);
+    // chain->poll(chain, true);
 
-    chain->tail->next_node = chain_find_node_by_name(chain, "_");
+    chain->tail->next_node = chain->find_node(chain, "_");
 
-    chain_has_loop(chain, false);
+    chain->check_loop(chain, false);
     printf("chain_has_loop: %d\n", chain->has_loop);
     printf("loop length: %zu\n", chain->loop_info->length);
     printf("junction name: %s\n", chain->loop_info->junction_node->name);
-    printf("end node name: %s\n", get_loop_end_node(chain)->name);
-
+    printf("end node name: %s\n", chain->get_loop_end(chain)->name);
 
     // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
     chain_destroy(chain);

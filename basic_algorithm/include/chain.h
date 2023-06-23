@@ -19,9 +19,23 @@ extern "C" {
 typedef struct chain_t chain_t;
 typedef struct chain_node_t chain_node_t;
 
+
 /* functions typedef */
 typedef void (chain_poll_func_t)(chain_t *chain, bool forward);
 typedef chain_node_t *(node_create_func_t)(chain_t *chain, const char *name);
+typedef void (node_destroy_func_t)(chain_node_t *node);
+typedef void (node_connect_func_t)(chain_node_t *dst_node, chain_node_t *src_node, bool front);
+typedef void (node_swap_t)(chain_node_t *dst_node, chain_node_t *src_node);
+
+typedef void (chain_append_func_t)(chain_t *chain, chain_node_t *node);
+typedef void (chain_node_insert_func_t)(chain_t *chain, chain_node_t *node, const char *name, bool front);
+typedef chain_node_t *(chain_find_node_by_name_func_t)(chain_t *chain, const char *name);
+typedef void (chain_remove_node_by_name_func_t)(chain_t *chain, const char *name);
+typedef void (chain_remove_all_func_t)(chain_t *chain);
+
+typedef bool (chain_has_loop_t)(chain_t *chain, bool detach);
+typedef chain_node_t *(get_loop_end_node_t)(chain_t *chain);
+
 
 /* typedef */
 typedef struct chain_node_t {
@@ -37,8 +51,6 @@ typedef struct {
     chain_node_t *junction_node;
     chain_node_t *end_node;
 } chain_loop_info_t;
-
-
 
 typedef struct chain_t {
     size_t length;
@@ -61,7 +73,19 @@ typedef struct chain_t {
     // functions
     struct {
         chain_poll_func_t *poll;
-        node_create_func_t *new_node;
+        node_create_func_t *node_new;
+        node_destroy_func_t *node_del;
+        node_connect_func_t *node_conn;
+        node_swap_t *node_swap;
+
+        chain_append_func_t *append;
+        chain_node_insert_func_t *insert;
+        chain_find_node_by_name_func_t *find_node;
+        chain_remove_node_by_name_func_t *rm_node;
+        chain_remove_all_func_t *rm_all_nodes;
+
+        chain_has_loop_t *check_loop;
+        get_loop_end_node_t *get_loop_end;
     };
 
 } chain_t;
@@ -71,23 +95,8 @@ typedef struct chain_t {
 chain_t *chain_create(char *desc);
 void chain_destroy(chain_t *chain);
 void chain_flush(chain_t *chain);
-
-void node_destroy(chain_node_t *node);
-void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front);
-void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node);
-
-void chain_append(chain_t *chain, chain_node_t *node);
-void chain_node_insert(chain_t *chain, chain_node_t *node, const char *name, bool front);
-chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name);
-
-void chain_remove_node_by_name(chain_t *chain, const char *name);
-void chain_remove_all(chain_t *chain);
-
 // extra functions
-bool chain_has_loop(chain_t *chain, bool detach);
-chain_node_t *determine_junction_node(chain_t *chain, chain_node_t *collision_node);
-int chain_loop_length(chain_node_t *collision_node);
-chain_node_t *get_loop_end_node(chain_t *chain);
+
 
 void chain_test();
 
