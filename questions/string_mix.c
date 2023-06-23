@@ -9,6 +9,7 @@
   */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "../basic_algorithm/config.h"
 #include "include/string_mix.h"
 

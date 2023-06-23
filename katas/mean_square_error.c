@@ -16,6 +16,7 @@
  */
 
 #include <math.h>
+#include <stddef.h>
 #include "include/mean_square_error.h"
 
 double mean_square_error(size_t len, const int *src1, const int *src2) {
