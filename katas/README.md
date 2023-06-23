@@ -5,17 +5,19 @@
 - [Category of katas](#category-of-katas)
   - [Number](#number)
   - [Statistics](#statistics)
+  - [Machine Learning](#machine-learning)
 
 ---
 
-## Number
+## Number and Math
 
 1. [Big numbers - Add](./big_num.c)
 2. [Big numbers - Multiply](./big_num.c)
-2. [Number to English](./num_english.c)
-3. [To camel case](./to_camel_case.c)
-4. [Prime determine](determine_prime.c)
-5. [Digital root](./digital_root)
+3. [Matrix - Add]()
+4. [Number to English](./num_english.c)
+5. [To camel case](./to_camel_case.c)
+6. [Prime determine](determine_prime.c)
+7. [Digital root](./digital_root)
 
 ## Statistics
 

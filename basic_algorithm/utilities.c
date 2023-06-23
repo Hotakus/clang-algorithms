@@ -191,8 +191,6 @@ long long int run_time(count_time_enum_t method, _func_t func) {
     long long int end_time = 0;
     long long int res = 0;
 
-    struct timeval begin, end;
-
     switch (method) {
         case COUNT_TIME_MS: {
             begin_time = clock();
@@ -202,6 +200,7 @@ long long int run_time(count_time_enum_t method, _func_t func) {
             break;
         }
         case COUNT_TIME_US: {
+            struct timeval begin, end;
             gettimeofday(&begin, NULL);
             func();
             gettimeofday(&end, NULL);
