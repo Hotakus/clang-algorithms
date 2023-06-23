@@ -1,14 +1,9 @@
 #ifndef CODEWAR_KATA_C_MAIN_H
 #define CODEWAR_KATA_C_MAIN_H
 
-
-
-#include "katas/include/find_odd_int.h"
-#include "katas/include/sum_of_positive.h"
-
-#include "basic_algorithm//ba.h"
-#include "katas/katas.h"
-#include "questions/questions.h"
+#include "./src/basic_algorithm/ba.h"
+#include "./src/katas/katas.h"
+#include "./src/questions/questions.h"
 
 #ifdef __cplusplus
 extern "C" {

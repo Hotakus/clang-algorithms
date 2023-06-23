@@ -13,10 +13,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib) # 动态库文件
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin) # 可执行文件目录
 
 # 添加子目录
+set(SRCS_DIR ./src/)
 aux_source_directory(. SRCS)
-add_subdirectory(katas)
-add_subdirectory(basic_algorithm)
-add_subdirectory(questions)
+add_subdirectory(${SRCS_DIR}/katas)
+add_subdirectory(${SRCS_DIR}/basic_algorithm)
+add_subdirectory(${SRCS_DIR}/questions)
 
 # 可执行文件
 add_executable(main ${SRCS})
