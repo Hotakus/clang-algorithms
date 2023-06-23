@@ -14,7 +14,17 @@ extern "C" {
 #define MIN(x, y)               (((x) < (y)) ? (x) : (y))
 #define ARRAY_SIZE(arr)         (sizeof(arr)/sizeof(arr[0]))
 
+#define CAST_VAR_TO_STR(name) (#name)
+
 #define IS_TRUE(b)     ((b == true) ? "true" : "false")
+
+typedef void (_func_t)();
+
+typedef enum count_time_enum_t {
+    COUNT_TIME_S,
+    COUNT_TIME_MS,
+    COUNT_TIME_US,
+} count_time_enum_t;
 
 // alpha and number
 int digits_len(long long int num);
@@ -34,7 +44,8 @@ void str_split_free(char **buf);
 char *str_chr(char ch, char *str);
 
 // miscellaneous
-
+long long int run_time(count_time_enum_t method, _func_t func);
+void run_time_show(const long long int *t);
 
 
 #ifdef __cplusplus

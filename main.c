@@ -28,18 +28,7 @@ typedef struct {
 }test_struct_t;
 
 int main() {
-
-//    test_struct_t a;
-//    a.tf = tf2;
-//    printf("%d\n", a.tf(123,2));
-//
-//    char *res = string_mix(str1, str2);
-//    printf("ex : %s\n", ex);
-//    printf("ac : %s\n", res);
-//    printf("%s\n", IS_TRUE(BA_STRCMP(res, ex) == 0));
-//    free(res);
-
-    chain_test();
-
+    long long int cost_time = run_time(COUNT_TIME_US, chain_test);
+    run_time_show(&cost_time);
     return 0;
 }

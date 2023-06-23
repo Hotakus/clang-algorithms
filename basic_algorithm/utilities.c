@@ -1,9 +1,15 @@
-#include "stdlib.h"
+#include <stdlib.h>
 #include <math.h>
+#include <time.h>
+#include <sys/time.h>
+#include <stdio.h>
 #include "include/utilities.h"
 
 #if DEBUG == 1
+
 #include <stdio.h>
+#include <profileapi.h>
+
 #endif
 
 /**
@@ -177,4 +183,46 @@ char *str_chr(char ch, char *str) {
         if (ch == str[i])
             return str;
     return NULL;
+}
+
+
+long long int run_time(count_time_enum_t method, _func_t func) {
+    long long int begin_time = 0;
+    long long int end_time = 0;
+    long long int res = 0;
+
+    struct timeval begin, end;
+
+    switch (method) {
+        case COUNT_TIME_MS: {
+            begin_time = clock();
+            func();
+            end_time = clock();
+            res = end_time - begin_time;
+            break;
+        }
+        case COUNT_TIME_US: {
+            gettimeofday(&begin, NULL);
+            func();
+            gettimeofday(&end, NULL);
+
+            long long int dif_sec = end.tv_sec - begin.tv_sec;
+            long long int dif_usec = end.tv_usec - begin.tv_usec;
+            res = dif_sec * 1000000 + dif_usec;
+            break;
+        }
+        case COUNT_TIME_S: {
+            begin_time = time(NULL);
+            func();
+            end_time = time(NULL);
+            res = end_time - begin_time;
+            break;
+        }
+    }
+
+    return res;
+}
+
+void run_time_show(const long long int *t) {
+    printf("Elapsed time: %lld secs, %lld ms, %lld us\n", (*t / 1000000), (*t / 1000), *t);
 }
