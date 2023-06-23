@@ -27,6 +27,8 @@
 
 static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool forward);
 
+static void chain_poll(chain_t *chain, bool forward);
+static chain_node_t *node_create(chain_t *chain, const char *name);
 
 /**
  * 创建一个节点
@@ -113,6 +115,10 @@ chain_t *chain_create(char *desc) {
     chain->head->next_node = chain->tail;
     chain->tail->prev_node = chain->head;
     chain->tail->next_node = NULL;
+
+    // default function
+    chain->poll = chain_poll;
+    chain->new_node = node_create;
 
 #if USE_CHAIN_SEM == 1
     int sem_res = sem_init(chain->nc_sem, 0, 1);
@@ -470,11 +476,12 @@ void chain_flush(chain_t *chain) {
 void chain_test() {
     chain_t *chain = chain_create("First chain");
 
-    chain_node_insert(chain, node_create(chain, "test"), "_", true);
-    chain_node_insert(chain, node_create(chain, "tnode2"), "_", false);
-    chain_node_insert(chain, node_create(chain, "tnode3"), "_", false);
+    chain_node_insert(chain, chain->new_node(chain, "test"), "_", true);
+    chain_node_insert(chain, chain->new_node(chain, "tnode2"), "_", false);
+    chain_node_insert(chain, chain->new_node(chain, "tnode3"), "_", false);
 
-    chain_poll(chain, true);
+    //chain_poll(chain, true);
+    chain->poll(chain, true);
 
     chain->tail->next_node = chain_find_node_by_name(chain, "_");
 

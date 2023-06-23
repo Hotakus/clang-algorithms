@@ -15,6 +15,15 @@
 extern "C" {
 #endif
 
+/* pre typedef */
+typedef struct chain_t chain_t;
+typedef struct chain_node_t chain_node_t;
+
+/* functions typedef */
+typedef void (chain_poll_func_t)(chain_t *chain, bool forward);
+typedef chain_node_t *(node_create_func_t)(chain_t *chain, const char *name);
+
+/* typedef */
 typedef struct chain_node_t {
     size_t id;
     const char *name;
@@ -28,6 +37,7 @@ typedef struct {
     chain_node_t *junction_node;
     chain_node_t *end_node;
 } chain_loop_info_t;
+
 
 
 typedef struct chain_t {
@@ -47,15 +57,21 @@ typedef struct chain_t {
 
     chain_node_t* head;
     chain_node_t* tail;
+
+    // functions
+    struct {
+        chain_poll_func_t *poll;
+        node_create_func_t *new_node;
+    };
+
 } chain_t;
 
 
+/* prototypes */
 chain_t *chain_create(char *desc);
 void chain_destroy(chain_t *chain);
-void chain_poll(chain_t *chain, bool forward);
 void chain_flush(chain_t *chain);
 
-chain_node_t *node_create(chain_t *chain, const char *name);
 void node_destroy(chain_node_t *node);
 void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front);
 void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node);

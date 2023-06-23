@@ -3,8 +3,12 @@ project(codewar_kata_c C)
 
 set(CMAKE_C_STANDARD 11)
 
-aux_source_directory(. SRCS)
 
+set(LINK_FLAGS      -Wl,--gc-sections)
+add_compile_options(-ffunction-sections
+                    -fdata-sections)
+
+aux_source_directory(. SRCS)
 add_subdirectory(katas)
 add_subdirectory(basic_algorithm)
 add_subdirectory(questions)
