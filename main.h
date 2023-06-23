@@ -8,7 +8,7 @@
 
 #include "basic_algorithm//ba.h"
 #include "katas/katas.h"
-
+#include "questions/questions.h"
 
 #ifdef __cplusplus
 extern "C" {

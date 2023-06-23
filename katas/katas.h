@@ -7,6 +7,7 @@
 #include "./include/digital_root.h"
 #include "./include/determine_prime.h"
 #include "./include/big_num.h"
+#include "./include/num_english.h"
 
 #ifdef __cplusplus
 extern "C" {
