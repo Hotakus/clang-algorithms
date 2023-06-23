@@ -146,13 +146,7 @@ void chain_destroy(chain_t *chain) {
         return;
     }
 
-    if (chain->has_loop) {
-        printf("end :-------- %s\n", chain->loop_info->end_node->name);
-        chain->loop_info->end_node->next_node = NULL;  // 断开环
-        free(chain->loop_info);
-        chain->loop_info = NULL;
-    }
-
+    chain_has_loop(chain, true);
     chain_remove_all(chain);
     node_destroy(chain->head);
     node_destroy(chain->tail);
@@ -388,6 +382,9 @@ bool chain_has_loop(chain_t *chain, bool detach) {
 
             if (detach) {
                 chain->has_loop = false;
+                chain->loop_info->end_node->next_node = NULL;  // 断开环
+                free(chain->loop_info);
+                chain->loop_info = NULL;
                 return false;
             }
 
