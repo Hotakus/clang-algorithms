@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <unistd.h>
 #include <ctype.h>
 #include "main.h"
@@ -22,11 +21,11 @@ void fun_test() {
     printf("------------------ Sort Test ( End ) ------------------\n\n");
 
     // chain test
-    printf("------------------ Chain Test (Begin) ------------------\n");
-    long long int cost_time = run_time(COUNT_TIME_US, chain_test);
-    run_time_show(&cost_time);
-    printf("%s\n", CW_KATA_VER);
-    printf("------------------ Chain Test ( End ) ------------------\n\n");
+//    printf("------------------ Chain Test (Begin) ------------------\n");
+//    long long int cost_time = run_time(COUNT_TIME_US, chain_test);
+//    run_time_show(&cost_time);
+//    printf("%s\n", CW_KATA_VER);
+//    printf("------------------ Chain Test ( End ) ------------------\n\n");
 
     // string mix
     printf("------------------ String Mix (Begin) ------------------\n");

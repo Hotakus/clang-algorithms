@@ -77,7 +77,6 @@ set(CMAKE_DEBUG_POSTFIX "_debug")
 add_executable(main ${ROOT_SRCS})
 
 # 链接库
-target_link_libraries(main m)
 target_link_libraries(main hba)
 target_link_libraries(main katas)
 target_link_libraries(main questions)

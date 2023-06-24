@@ -15,13 +15,14 @@
  * and returns the average of those squared absolute value difference between each member pair.
  */
 
-#include <math.h>
 #include <stddef.h>
 #include "include/mean_square_error.h"
 
 double mean_square_error(size_t len, const int *src1, const int *src2) {
     double ret = 0;
-    for (size_t i = 0; i < len; ++i)
-        ret += pow(src1[i] - src2[i], 2);
+    for (size_t i = 0; i < len; ++i) {
+        double diff = src1[i] - src2[i];
+        ret += diff * diff;
+    }
     return ret / ((double) len);
 }
