@@ -27,13 +27,14 @@ MESSAGE(STATUS "Current build type: ${CMAKE_BUILD_TYPE}")
 
 # 设置工具链
 if (CW_KATA_ARM)
-    set(ARM_ARCH        armv7-m)
+    set(ARM_CPU         cortex-m3)
+    set(ARM_ARCH        armv7)
     set(ARM_FLOAT_ABI   soft) # soft softfp hard
     set(ARM_FPU         "") # "-mfpu=neon-vfpv4"
-    set(TOOL_C_PATH     "/home/hotakus/dl/gcc-linaro-11.3.1-2022.06-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc")
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -march=${ARM_ARCH} -mfloat-abi=${ARM_FLOAT_ABI} ${ARM_FPU} -mno-unaligned-access -fno-aggressive-loop-optimizations")
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -O3")
+    set(TOOL_C_PATH     "/home/hotakus/dl/gcc-arm-10.3-2021.07-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc")
     SET(CMAKE_C_COMPILER ${TOOL_C_PATH})
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -O3")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -march=${ARM_ARCH} -mfloat-abi=${ARM_FLOAT_ABI} ${ARM_FPU} -mno-unaligned-access -fno-aggressive-loop-optimizations")
 else ()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
 endif ()
