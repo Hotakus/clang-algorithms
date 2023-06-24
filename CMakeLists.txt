@@ -41,7 +41,7 @@ endif ()
 
 #设置编译、链接参数等
 set(LINK_FLAGS      "${LINK_FLAGS} -Wl,-Map=object.map,--cref,--gc-section")
-set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -fdata-sections -ffunction-sections -Wall")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} --specs=nosys.specs -fdata-sections -ffunction-sections -Wall")
 message(WARNING     "${LINK_FLAGS}")
 message(WARNING     "${CMAKE_C_FLAGS}")
 
