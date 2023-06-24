@@ -9,15 +9,15 @@
   */
 
 #include "determine_prime.h"
-
+#include "../basic_algorithm/ba.h"
 
 bool prime_determine(int num, bool opt) {
-//    if (num <= 1)
-//        return false;
-//    for (int i = 2; i <= (opt ? (int)sqrt(num) : (num >> 1)); ++i)
-//        if (num % i == 0)
-//            return false;
-//    return true;
+    if (num <= 1)
+        return false;
+    for (int i = 2; i <= (opt ? (int)h_fast_sqrt((float)num) : (num >> 1)); ++i)
+        if (num % i == 0)
+            return false;
+    return true;
 }
 
 

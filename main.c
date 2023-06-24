@@ -11,6 +11,18 @@ char *str2 = "fevbekrsaanbbsbrzwwbvfsdb";
 char *ex = "2:bbbbbb/1:qqq/2:sss/1:pp/1:tt/1:zz/2:ee/2:rr/2:vv/=:aa/=:ff/=:ww";
 
 void fun_test() {
+    // Make a spiral
+    printf("------------------ Make A Spiral (Begin) ------------------\n");
+    int a[5][5] = {0};
+    make_a_spiral(5, a);
+    for (int i = 0; i < 5; ++i) {
+        for (int k = 0; k < 5; ++k) {
+            printf("%d ", a[i][k]);
+        }
+        printf("\n");
+    }
+    printf("------------------ Make A Spiral ( End ) ------------------\n\n");
+
     // sort test
     printf("------------------ Sort Test (Begin) ------------------\n");
     char *test_s1 = calloc(BA_STRLEN(str1), sizeof(char));
@@ -34,10 +46,8 @@ void fun_test() {
     free(res1);
     printf("------------------ String Mix ( End ) ------------------\n\n");
 }
-#include <math.h>
+
 int main() {
-    printf("%f\n", h_fast_sqrt(4));
-    printf("%f\n", sqrt(4));
     fun_test();
     return 0;
 }
