@@ -5,6 +5,8 @@
 #include "./src/katas/katas.h"
 #include "./src/questions/questions.h"
 
+#include "version.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

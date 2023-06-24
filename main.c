@@ -30,5 +30,6 @@ typedef struct {
 int main() {
     long long int cost_time = run_time(COUNT_TIME_US, chain_test);
     run_time_show(&cost_time);
+    printf("%s\n", CW_KATA_VER);
     return 0;
 }
