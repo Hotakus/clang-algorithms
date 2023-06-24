@@ -25,9 +25,10 @@ else ()
 endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
 MESSAGE(STATUS "Current build type: ${CMAKE_BUILD_TYPE}")
 
+
 #设置编译、链接参数等
 set(LINK_FLAGS      "${LINK_FLAGS} -Wl,-Map=object.map,--cref,--gc-section")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdata-sections -ffunction-sections -Os -Wall -s")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdata-sections -ffunction-sections -Os -Wall")
 message(WARNING "${LINK_FLAGS}")
 message(WARNING "${CMAKE_C_FLAGS}")
 
