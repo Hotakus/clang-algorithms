@@ -1,15 +1,12 @@
 #include <stdlib.h>
-#include <math.h>
 #include <time.h>
 #include <sys/time.h>
 #include <stdio.h>
 #include "include/utilities.h"
 
 #if DEBUG == 1
-
 #include <stdio.h>
 #include <profileapi.h>
-
 #endif
 
 /**
@@ -33,7 +30,7 @@ int digits_len(long long int num) {
  * @return
  */
 int get_digit(long long int num, unsigned char d) {
-    num /= (int) pow(10, d);
+    for (int i = 0; i < d; ++i) num /= 10;
     return (int) (num % 10);
 }
 
@@ -221,6 +218,7 @@ long long int run_time(count_time_enum_t method, _func_t func) {
 
     return res;
 }
+
 
 void run_time_show(const long long int *t) {
     printf("Elapsed time: %lld secs, %lld ms, %lld us\n", (*t / 1000000), (*t / 1000), *t);
