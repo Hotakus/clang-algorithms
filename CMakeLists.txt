@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_C_STANDARD 11)
 project(codewar_kata_c
-        LANGUAGES C
-        VERSION 1.0.0.0
-        DESCRIPTION "Practices"
-        HOMEPAGE_URL https://www.codewars.com/users/Hotakus
+            LANGUAGES C
+            VERSION 1.0.0.0
+            DESCRIPTION "Practices"
+            HOMEPAGE_URL https://www.codewars.com/users/Hotakus
         )
 
 # 指定版本号的配置文件
@@ -27,11 +27,11 @@ MESSAGE(STATUS "Current build type: ${CMAKE_BUILD_TYPE}")
 
 # 设置工具链
 if (CW_KATA_ARM)
-    set(ARM_CPU         cortex-m3)
-    set(ARM_FLOAT_ABI   softfp) # softfp hard
-    set(ARM_FPU         neon-vfpv4) # softfp hard
+    set(ARM_ARCH        armv7-m)
+    set(ARM_FLOAT_ABI   soft) # soft softfp hard
+    set(ARM_FPU         "") # "-mfpu=neon-vfpv4"
     set(TOOL_C_PATH     "/home/hotakus/dl/gcc-linaro-11.3.1-2022.06-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc")
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -mcpu=${ARM_CPU} -mfloat-abi=${ARM_FLOAT_ABI} -mfpu=${ARM_FPU} -mno-unaligned-access -fno-aggressive-loop-optimizations")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -march=${ARM_ARCH} -mfloat-abi=${ARM_FLOAT_ABI} ${ARM_FPU} -mno-unaligned-access -fno-aggressive-loop-optimizations")
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -O3")
     SET(CMAKE_C_COMPILER ${TOOL_C_PATH})
 else ()
