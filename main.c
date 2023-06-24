@@ -5,26 +5,22 @@
 #include <ctype.h>
 #include "main.h"
 
-
-char *str1 = "pqmpgtzzfaqftdawjqiurwscy";
-char *str2 = "fevbekrsaanbbsbrzwwbvfsdb";
-char *ex = "2:bbbbbb/1:qqq/2:sss/1:pp/1:tt/1:zz/2:ee/2:rr/2:vv/=:aa/=:ff/=:ww";
-
 void fun_test() {
     // Make a spiral
     printf("------------------ Make A Spiral (Begin) ------------------\n");
     int a[5][5] = {0};
     make_a_spiral(5, a);
     for (int i = 0; i < 5; ++i) {
-        for (int k = 0; k < 5; ++k) {
-            printf("%d ", a[i][k]);
-        }
+        for (int k = 0; k < 5; ++k) printf("%d ", a[i][k]);
         printf("\n");
     }
     printf("------------------ Make A Spiral ( End ) ------------------\n\n");
 
     // sort test
     printf("------------------ Sort Test (Begin) ------------------\n");
+    char *str1 = "pqmpgtzzfaqftdawjqiurwscy";
+    char *str2 = "fevbekrsaanbbsbrzwwbvfsdb";
+    char *ex = "2:bbbbbb/1:qqq/2:sss/1:pp/1:tt/1:zz/2:ee/2:rr/2:vv/=:aa/=:ff/=:ww";
     char *test_s1 = calloc(BA_STRLEN(str1), sizeof(char));
     BA_STRCPY(test_s1, str1);
     bubble_sort_char(test_s1, false);
