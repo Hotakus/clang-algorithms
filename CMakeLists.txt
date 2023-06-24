@@ -27,15 +27,22 @@ MESSAGE(STATUS "Current build type: ${CMAKE_BUILD_TYPE}")
 
 # 设置工具链
 if (CW_KATA_ARM)
-    set(TOOL_C_PATH "/home/hotakus/dl/gcc-linaro-11.3.1-2022.06-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc")
+    set(ARM_CPU         cortex-m3)
+    set(ARM_FLOAT_ABI   softfp) # softfp hard
+    set(ARM_FPU         neon-vfpv4) # softfp hard
+    set(TOOL_C_PATH     "/home/hotakus/dl/gcc-linaro-11.3.1-2022.06-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -mcpu=${ARM_CPU} -mfloat-abi=${ARM_FLOAT_ABI} -mfpu=${ARM_FPU} -mno-unaligned-access -fno-aggressive-loop-optimizations")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -O3")
     SET(CMAKE_C_COMPILER ${TOOL_C_PATH})
+else ()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
 endif ()
 
 #设置编译、链接参数等
 set(LINK_FLAGS      "${LINK_FLAGS} -Wl,-Map=object.map,--cref,--gc-section")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdata-sections -ffunction-sections -Os -Wall")
-message(WARNING "${LINK_FLAGS}")
-message(WARNING "${CMAKE_C_FLAGS}")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -fdata-sections -ffunction-sections -Wall")
+message(WARNING     "${LINK_FLAGS}")
+message(WARNING     "${CMAKE_C_FLAGS}")
 
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
