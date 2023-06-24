@@ -25,6 +25,11 @@ else ()
 endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
 MESSAGE(STATUS "Current build type: ${CMAKE_BUILD_TYPE}")
 
+# 设置工具链
+if (CW_KATA_ARM)
+    set(TOOL_C_PATH "/home/hotakus/dl/gcc-linaro-11.3.1-2022.06-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc")
+    SET(CMAKE_C_COMPILER ${TOOL_C_PATH})
+endif ()
 
 #设置编译、链接参数等
 set(LINK_FLAGS      "${LINK_FLAGS} -Wl,-Map=object.map,--cref,--gc-section")
