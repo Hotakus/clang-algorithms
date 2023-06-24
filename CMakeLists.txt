@@ -27,7 +27,8 @@ MESSAGE(STATUS "Current build type: ${CMAKE_BUILD_TYPE}")
 
 #设置编译、链接参数等
 set(LINK_FLAGS      -Wl,--gc-sections)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdata-sections -ffunction-sections -Os -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdata-sections -ffunction-sections -Os -Wall -s")
+message(WARNING "${CMAKE_C_FLAGS}")
 
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
