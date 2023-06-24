@@ -34,8 +34,10 @@ void fun_test() {
     free(res1);
     printf("------------------ String Mix ( End ) ------------------\n\n");
 }
-
+#include <math.h>
 int main() {
+    printf("%f\n", h_fast_sqrt(4));
+    printf("%f\n", sqrt(4));
     fun_test();
     return 0;
 }

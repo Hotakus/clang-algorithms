@@ -9,6 +9,7 @@
 #include "include/dict.h"
 #include "include/utilities.h"
 #include "include/bit.h"
+#include "./include/h_math.h"
 
 #ifdef __cplusplus
 extern "C" {
