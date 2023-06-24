@@ -28,10 +28,16 @@ void fun_test() {
     free(test_s1);
     printf("------------------ Sort Test ( End ) ------------------\n\n");
 
+    // stack test
+    printf("------------------ Stack Test (Begin) ------------------\n");
+    long long int cost_time = run_time(COUNT_TIME_US, stack_test);
+    run_time_show(&cost_time);
+    printf("------------------ Stack Test ( End ) ------------------\n\n");
+
     // chain test
     printf("------------------ Chain Test (Begin) ------------------\n");
-    long long int cost_time = run_time(COUNT_TIME_US, chain_test);
-    run_time_show(&cost_time);
+    long long int cost_time2 = run_time(COUNT_TIME_US, chain_test);
+    run_time_show(&cost_time2);
     printf("%s\n", CW_KATA_VER);
     printf("------------------ Chain Test ( End ) ------------------\n\n");
 
@@ -44,6 +50,7 @@ void fun_test() {
 }
 
 int main() {
+
     fun_test();
     return 0;
 }
