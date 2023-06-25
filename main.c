@@ -50,7 +50,6 @@ void fun_test() {
 }
 
 int main() {
-
     fun_test();
     return 0;
 }

@@ -1,23 +1,28 @@
 /**
   ******************************************************************************
-  * @file      : questions.h
+  * @file      : sum_intervals.h
   * @author    : Hotakus (ttowfive@gmail.com)
   * @brief     : None
   * @attention : None
-  * @date      : 2023/6/23
+  * @date      : 2023/6/25
   ******************************************************************************
   */
 
-#ifndef CODEWAR_KATA_C_QUESTIONS_H
-#define CODEWAR_KATA_C_QUESTIONS_H
+#ifndef CODEWAR_KATA_C_SUM_INTERVALS_H
+#define CODEWAR_KATA_C_SUM_INTERVALS_H
 
-#include "./include/string_mix.h"
-#include "./include/make_a_spiral.h"
-#include "./include/sum_intervals.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct interval {
+    int first;
+    int second;
+} interval_t;
+
+int sum_intervals(const interval_t *v, size_t n);
 
 /*...*/
 
@@ -25,4 +30,4 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#endif //CODEWAR_KATA_C_QUESTIONS_H
+#endif //CODEWAR_KATA_C_SUM_INTERVALS_H
