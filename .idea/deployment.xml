@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" serverName="centos (c55379b9-d81d-4b1b-ab62-87db72aa1750)" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="centos8 (baf82033-67f5-4544-893f-417fe08dc924)">
+      <paths name="centos (c55379b9-d81d-4b1b-ab62-87db72aa1750)">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/tmp/tmp.4PLrHFjFgp" local="$PROJECT_DIR$" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-release" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-minsizerel" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-default-centos" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-relwithdebinfo" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>
