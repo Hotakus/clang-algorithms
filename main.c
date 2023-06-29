@@ -6,6 +6,18 @@
 #include "main.h"
 
 void fun_test() {
+    char *str1 = NULL;
+    char *str2 = NULL;
+
+    // lcs test
+    printf("------------------ LCS Test (Begin) ------------------\n");
+    str1 = "nothardlythefinaltest";
+    str2 = "zzzfinallyzzz";
+    lcs_t *res_lcs = lcs_solve(str1, str2);
+    char *res = lcs_body(res_lcs);
+    printf("%s\n", res);
+    printf("------------------ LCS Test ( End ) ------------------\n\n");
+
     // Make a spiral
     printf("------------------ Make A Spiral (Begin) ------------------\n");
     int a[5][5] = {0};
@@ -18,8 +30,8 @@ void fun_test() {
 
     // sort test
     printf("------------------ Sort Test (Begin) ------------------\n");
-    char *str1 = "pqmpgtzzfaqftdawjqiurwscy";
-    char *str2 = "fevbekrsaanbbsbrzwwbvfsdb";
+    str1 = "pqmpgtzzfaqftdawjqiurwscy";
+    str2 = "fevbekrsaanbbsbrzwwbvfsdb";
     char *ex = "2:bbbbbb/1:qqq/2:sss/1:pp/1:tt/1:zz/2:ee/2:rr/2:vv/=:aa/=:ff/=:ww";
     char *test_s1 = calloc(BA_STRLEN(str1), sizeof(char));
     BA_STRCPY(test_s1, str1);
