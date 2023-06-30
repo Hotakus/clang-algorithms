@@ -374,7 +374,7 @@ void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
 static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool forward) {
     for (unsigned char step = 0; step < steps; step += 1) {
         if (node->next_node == NULL)
-            return NULL;
+            break;
 
         if (forward)
             node = node->next_node;
@@ -397,6 +397,15 @@ bool chain_has_loop(chain_t *chain, bool detach) {
     chain_node_t *fast = chain->head;
     unsigned char fast_step = 2;  // 步进
     unsigned char slow_step = 1;
+
+    if (chain->length < 2) {
+        if (chain->tail->next_node == chain->head) {
+            if (detach) {
+                chain->tail->next_node = NULL;
+                chain->head->prev_node = NULL;
+            }
+        }
+    }
 
     while (fast->next_node != NULL) {
         fast = node_step(fast, fast_step, true);
@@ -465,7 +474,7 @@ chain_node_t *determine_junction_node(chain_t *chain, chain_node_t *collision_no
     chain_node_t *head = chain->head;
     chain_node_t *collision = collision_node;
 
-    while(head->next_node != NULL) {
+    while (head->next_node != NULL) {
         head = node_step(head, 1, true);
         collision = node_step(collision, 1, true);
         if (head == collision) {
