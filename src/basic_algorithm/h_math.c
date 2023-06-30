@@ -11,14 +11,14 @@
 #include "./include/h_math.h"
 
 float h_fast_sqrt(float x) {
-    float xhalf = 0.5f * x;
+    float x_half =  x / 2;
     int i = *(int *) &x;
     
     i = 0x5f375a86 - (i >> 1);
     x = *(float *) &i;
-    x = x * (1.5f - xhalf * x * x);
-    x = x * (1.5f - xhalf * x * x);
-    x = x * (1.5f - xhalf * x * x);
+    x = x * (1.5f - x_half * x * x);
+    x = x * (1.5f - x_half * x * x);
+    x = x * (1.5f - x_half * x * x);
 
     return 1 / x;
 }
