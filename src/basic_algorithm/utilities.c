@@ -76,22 +76,12 @@ int str_cmp(const char *s1, const char *s2) {
     int t;
     t = *s1 - *s2;
 
-    if (t == 0) {
-#if DEBUG == 1
-        printf("%s: same string\n", __FUNCTION__);
-#endif
+    if (t == 0)
         t = 0;
-    } else if (t > 0) {
-#if DEBUG == 1
-        printf("%s: str1 is bigger\n", __FUNCTION__);
-#endif
+    else if (t > 0)
         t = 1;
-    } else {
-#if DEBUG == 1
-        printf("%s: str2 is bigger\n", __FUNCTION__);
-#endif
+    else
         t = -1;
-    }
 
     return t;
 }
