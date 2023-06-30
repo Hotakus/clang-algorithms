@@ -14,10 +14,10 @@
 
 
 /**
- *
- * @param str1
- * @param str2
- * @return
+ * 进行LCS操作的主体
+ * @param str1 要操作的字符串1
+ * @param str2 要操作的字符串2
+ * @return lcs 结构体
  */
 lcs_t *lcs_solve(const char *str1, const char *str2) {
     lcs_t *lcs = calloc(1, sizeof(lcs_t));
@@ -56,11 +56,21 @@ lcs_t *lcs_solve(const char *str1, const char *str2) {
     return lcs;
 }
 
+/**
+ * 打印 lcs 结构体
+ * @param lcs 结构体
+ */
 int lcs_length(lcs_t *lcs) {
     if (!lcs || !lcs->mat) return -1;
     return lcs->mat[lcs->s1_length][lcs->s2_length];
 }
 
+
+/**
+ * 回溯 lcs， 获取最长公共子序列
+ * @param lcs 要操作的 lcs 结构体
+ * @return 最长公共子序列，该值也会存储在 lcs 结构体中
+ */
 const char *lcs_body(lcs_t *lcs) {
     int lcs_len = lcs_length(lcs);
     if (!lcs->sub)
@@ -82,6 +92,11 @@ const char *lcs_body(lcs_t *lcs) {
     return lcs->sub;
 }
 
+
+/**
+ * lcs 结构体释放
+ * @param lcs 要释放的lcs结构体
+ */
 void lcs_free(lcs_t *lcs) {
     if (!lcs || !lcs->mat) return;
     for (int i = 0; i < lcs->s1_length + 1; ++i)
@@ -100,6 +115,10 @@ void lcs_free(lcs_t *lcs) {
 }
 
 
+/**
+ * lcs 内容显示
+ * @param lcs 要显示的lcs结构体
+ */
 void lcs_show(lcs_t *lcs) {
     printf("results: \n");
     for (int i = 0; i < lcs->s1_length + 1; ++i) {
