@@ -3,9 +3,11 @@
 ---
 
 - [Category of katas](#category-of-katas)
-  - [Number](#number)
+  - [Number and Math](#number-and-math)
   - [Statistics](#statistics)
+  - [String](#string)
   - [Machine Learning](#machine-learning)
+
 
 ---
 
