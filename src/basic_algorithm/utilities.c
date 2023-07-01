@@ -6,7 +6,6 @@
 
 #if DEBUG == 1
 #include <stdio.h>
-#include <profileapi.h>
 #endif
 
 /**
