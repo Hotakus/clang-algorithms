@@ -34,9 +34,10 @@ static void node_destroy(chain_node_t *node);
 static void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front);
 
 static void chain_append(chain_t *chain, chain_node_t *node);
+static chain_node_t *chain_pop(chain_t *chain);
 static void chain_node_insert(chain_t *chain, chain_node_t *node, const char *name, bool front);
-static chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name);
-static void chain_remove_node_by_name(chain_t *chain, const char *name);
+static chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name, bool forward);
+static void chain_remove_node(chain_t *chain, const char *name, chain_node_t *_node);
 static void chain_remove_all(chain_t *chain);
 
 static bool chain_has_loop(chain_t *chain, bool detach);
@@ -65,7 +66,7 @@ chain_node_t *node_create(chain_t *chain, const char *name) {
 
     node->prev_node = NULL;
     node->next_node = NULL;
-    node->value = NULL;
+    node->data = NULL;
 
 #if USE_CHAIN_SEM == 1
     int sem_res = sem_wait(chain->nc_sem);
@@ -79,7 +80,7 @@ chain_node_t *node_create(chain_t *chain, const char *name) {
     }
 #endif
 
-    chain->length++;
+    chain->length += 1;
     node->id = chain->length;
 
 #if USE_CHAIN_SEM == 1
@@ -118,11 +119,11 @@ void node_destroy(chain_node_t *node) {
 chain_t *chain_create(char *desc) {
     chain_t *chain = (chain_t *) calloc(1, sizeof(chain_t));
 
-    chain->length = 0;  // head and tail
     chain->desc = desc;  // chain description (Maybe empty)
     chain->is_loop = false;
 
     // create head and tail nodes.
+    chain->length = 0;  // head and tail
     chain->head = node_create(chain, "head");
     chain->tail = node_create(chain, "_");
 
@@ -140,7 +141,7 @@ chain_t *chain_create(char *desc) {
     chain->append = chain_append;
     chain->insert = chain_node_insert;
     chain->find_node = chain_find_node_by_name;
-    chain->rm_node = chain_remove_node_by_name;
+    chain->rm_node = chain_remove_node;
     chain->rm_all_nodes = chain_remove_all;
 
     chain->check_loop = chain_has_loop;
@@ -191,7 +192,7 @@ void chain_remove_all(chain_t *chain) {
         return;
     }
 
-    chain_node_t *probe = ((chain_node_t *) chain->head->next_node)->next_node;
+    chain_node_t *probe = chain->head->next_node->next_node;
     while (probe != chain->tail->next_node) {
         node_destroy(probe->prev_node);
         probe = probe->next_node;
@@ -199,6 +200,8 @@ void chain_remove_all(chain_t *chain) {
 
     chain->head->next_node = chain->tail;
     chain->tail->prev_node = chain->head;
+
+    chain->length = 2;
 }
 
 
@@ -227,13 +230,24 @@ void chain_append(chain_t *chain, chain_node_t *node) {
 }
 
 
+// TODO: pop
+chain_node_t *chain_pop(chain_t *chain) {
+
+}
+
+
 /**
  * 根据name在chain中找到node并返回
  * @param chain 要操作的链表
  * @param name 要找的node的名字
+ * @param forward 顺序还是逆序
  * @return node
  */
-chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name) {
+chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name, bool forward) {
+
+    if (BA_STRCMP(name, chain->head->name) == 0) return chain->head;
+    if (BA_STRCMP(name, chain->tail->name) == 0) return chain->tail;
+
     chain_node_t *probe = chain->head;
     while (probe != chain->tail->next_node) {
         if (BA_STRCMP(probe->name, name) != 0) {
@@ -254,7 +268,7 @@ chain_node_t *chain_find_node_by_name(chain_t *chain, const char *name) {
  * @param front 如果true，则插入前面。如果false，则插入后面
  */
 void chain_node_insert(chain_t *chain, chain_node_t *node, const char *name, bool front) {
-    chain_node_t *dst = chain_find_node_by_name(chain, name);
+    chain_node_t *dst = chain_find_node_by_name(chain, name, true);
     chain_node_t *dst_delta = NULL;
 
     if (front) {
@@ -300,14 +314,14 @@ void chain_poll(chain_t *chain, bool forward) {
         chain_node_t *probe = chain->head;
         printf("chain_poll: forward\n");
         while (probe != chain->tail->next_node) {
-            printf("%s \t %zu \t %s \n", probe->name, probe->id, (char *) probe->value);
+            printf("%s \t %zu \t %s \n", probe->name, probe->id, (char *) probe->data);
             probe = probe->next_node;
         }
     } else {
         chain_node_t *probe = chain->tail;
         printf("chain_poll: backward\n");
         while (probe != chain->head->prev_node) {
-            printf("%s \t %zu \t %s \n", probe->name, probe->id, (char *) probe->value);
+            printf("%s \t %zu \t %s \n", probe->name, probe->id, (char *) probe->data);
             probe = probe->prev_node;
         }
     }
@@ -320,12 +334,13 @@ void chain_poll(chain_t *chain, bool forward) {
  * @param chain 要操作的链表
  * @param name node的名字
  */
-void chain_remove_node_by_name(chain_t *chain, const char *name) {
-    chain_node_t *node = chain_find_node_by_name(chain, name);
+void chain_remove_node(chain_t *chain, const char *name, chain_node_t *_node) {
+    chain_node_t *node = (_node) ? _node: (chain_find_node_by_name(chain, name, true));
     chain_node_t *p_node = node->prev_node;
     chain_node_t *n_node = node->next_node;
 
     node_connect(p_node, n_node, false);
+    chain->length -= 1;
 
     node_destroy(node);
 }
@@ -393,6 +408,14 @@ static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool for
  * @return 是否含含环，若detach == true，则返回false
  */
 bool chain_has_loop(chain_t *chain, bool detach) {
+
+    if (chain->length == 2) {
+#if DEBUG == 1
+        printf("chain_has_loop: chain is empty\n");
+#endif // DEBUG
+        return false;
+    }
+
     chain_node_t *slow = chain->head;
     chain_node_t *fast = chain->head;
     unsigned char fast_step = 2;  // 步进
@@ -500,6 +523,17 @@ chain_node_t *get_loop_end_node(chain_t *chain) {
 }
 
 
+chain_t *chain_merge(chain_t *chain1, chain_t *chain2) {
+    if (chain1 == NULL || chain2 == NULL)
+        return NULL;
+
+    chain_t *chain3 = (chain_t *) calloc(1, sizeof(chain_t));
+
+
+    return NULL;
+}
+
+
 void chain_flush(chain_t *chain) {
 
 }
@@ -509,24 +543,26 @@ void chain_test() {
     chain_t *chain = chain_create("First chain");
 
     chain->insert(chain, chain->node_new(chain, "test"), "_", true);
-    chain->insert(chain, chain->node_new(chain, "tnode2"), "_", false);
-    chain->insert(chain, chain->node_new(chain, "tnode3"), "_", false);
+    chain->insert(chain, chain->node_new(chain, "test"), "_", true);
+    chain->insert(chain, chain->node_new(chain, "test2"), "_", false);
+    chain->insert(chain, chain->node_new(chain, "test2"), "head", false);
+    chain->append(chain, chain->node_new(chain, "testa"));
 
-    for (int i = 0; i < 1000000; ++i) {
-        chain->append(chain, chain->node_new(chain, "t"));
-    }
+//    chain_node_t *node = chain->head;
+//    while(node != chain->tail->next_node) {
+//        printf("%s\n", node->name);
+//        node = node->next_node;
+//    }
 
-    //chain_poll(chain, true);
-    // chain->poll(chain, true);
+    chain_poll(chain, true);
 
-    chain->tail->next_node = chain->find_node(chain, "_");
-
+    chain->tail->next_node = chain->find_node(chain, "_", true);
     chain->check_loop(chain, false);
+    printf("chain length: %zu\n", chain->length);
     printf("chain_has_loop: %d\n", chain->has_loop);
     printf("loop length: %zu\n", chain->loop_info->length);
     printf("junction name: %s\n", chain->loop_info->junction_node->name);
     printf("end node name: %s\n", chain->get_loop_end(chain)->name);
 
-    // printf("p: %zu | %s\n", ((chain_node_t*)chain->tail->prev_node)->id, (char *)((chain_node_t*)chain->tail->prev_node)->value);
     chain_destroy(chain);
 }

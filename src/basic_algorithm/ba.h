@@ -11,6 +11,7 @@
 #include "include/bit.h"
 #include "./include/h_math.h"
 #include "include/stack.h"
+#include "include/queue.h"
 
 #ifdef __cplusplus
 extern "C" {
