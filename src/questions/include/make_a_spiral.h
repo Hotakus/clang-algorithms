@@ -20,6 +20,7 @@ typedef enum STEP_DIR {
 } step_dir_t;
 
 void make_a_spiral(unsigned n, int spiral[n][n]);
+const int *snail(size_t *outsz, const int **mx, size_t rows, size_t cols);
 
 /*...*/
 
