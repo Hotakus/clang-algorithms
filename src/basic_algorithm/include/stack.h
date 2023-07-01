@@ -11,12 +11,10 @@
 #ifndef CODEWAR_KATA_C_STACK_H
 #define CODEWAR_KATA_C_STACK_H
 
-#include "chain.h"
-
 typedef struct stack_elem_t stack_elem_t;
 typedef struct stack_elem_t {
     char *name;
-    void *value;
+    void *data;
     stack_elem_t *down;
 } stack_elem_t;
 
@@ -33,10 +31,10 @@ extern "C" {
 stack_t *stack_create(char *desc);
 void stack_destroy(stack_t *stack);
 
-stack_elem_t *stack_append(stack_t *stack, stack_elem_t *stack_elem);
+stack_elem_t *stack_push(stack_t *stack, stack_elem_t *stack_elem);
 stack_elem_t *stack_pop(stack_t *stack);
-stack_elem_t *elem_create(char *name, void *value);
-void elem_destroy(stack_elem_t *elem);
+stack_elem_t *stack_elem_create(char *name, void *value);
+void stack_elem_destroy(stack_elem_t *elem);
 
 void stack_test();
 
