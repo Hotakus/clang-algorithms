@@ -73,7 +73,9 @@ void fun_test() {
 
 int main() {
 
-    hash_test();
+    size_t cost_time2 = run_time(COUNT_TIME_US, hash_test);
+    run_time_show(&cost_time2);
+
     //chain_test();
 
     // fun_test();
