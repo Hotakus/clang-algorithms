@@ -133,6 +133,7 @@ void hash_table_remove(hash_table_t *ht, char *key) {
             entry->rm_node(entry, key, NULL);
         }
     }
+    ht->cur_size -= 1;
 }
 
 void hash_table_rehash(hash_table_t *ht) {
@@ -166,7 +167,7 @@ void hash_test() {
     printf("%s: %d\n", pair3->name, *(int *) pair3->data);
     printf("%s: %d\n", pair4->name, *(int *) pair4->data);
 
-    hash_table_remove(ht, "hello4");
+    ht->remove(ht, "hello4");
 
     ht->map[0].entry->poll(ht->map[0].entry, true);
     ht->map[1].entry->poll(ht->map[1].entry, true);
