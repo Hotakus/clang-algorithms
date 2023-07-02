@@ -36,7 +36,7 @@ hash_table_t *hash_table(char *desc, size_t pre_size);
 void hash_table_free(hash_table_t *ht);
 int hash_table_put(hash_table_t *ht, char *key, void *value);
 hash_table_key_value_t *hash_table_get(hash_table_t *ht, char *key);
-void *hash_table_remove(hash_table_t *ht, char *key);
+void hash_table_remove(hash_table_t *ht, char *key);
 void hash_table_rehash(hash_table_t *ht);
 void hash_table_clear(hash_table_t *ht);
 

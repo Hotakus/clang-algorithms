@@ -102,7 +102,7 @@ void node_destroy(chain_node_t *node) {
     }
 
 #if DEBUG == 1
-    printf("destroy node id - %zu\n", node->id);
+    printf("destroy node id - %zu (%s)\n", node->id, node->name);
 #endif // DEBUG
 
     free(node);
@@ -124,7 +124,7 @@ chain_t *chain_create(char *desc) {
     // create head and tail nodes.
     chain->length = 0;  // head and tail
     chain->head = node_create(chain, "head");
-    chain->tail = node_create(chain, "_");
+    chain->tail = node_create(chain, "tail");
 
     chain->head->prev_node = NULL;
     chain->head->next_node = chain->tail;
@@ -191,10 +191,11 @@ void chain_remove_all(chain_t *chain) {
         return;
     }
 
-    chain_node_t *probe = chain->head->next_node->next_node;
-    while (probe != chain->tail->next_node) {
-        node_destroy(probe->prev_node);
-        probe = probe->next_node;
+    chain_node_t *probe = chain->head->next_node;
+    while (probe != chain->tail) {
+        chain_node_t *next = probe->next_node;
+        node_destroy(probe);
+        probe = next;
     }
 
     chain->head->next_node = chain->tail;
@@ -222,9 +223,11 @@ void chain_append(chain_t *chain, chain_node_t *node) {
     if (chain->is_loop) {
         // TODO: is loop
     } else {
-        chain->tail->next_node = node;
-        node->prev_node = chain->tail;
-        chain->tail = node;
+        chain_node_t *prev = chain->tail->prev_node;
+        prev->next_node = node;
+        node->prev_node = prev;
+        node->next_node = chain->tail;
+        chain->tail->prev_node = node;
     }
 }
 
@@ -541,21 +544,18 @@ void chain_flush(chain_t *chain) {
 void chain_test() {
     chain_t *chain = chain_create("First chain");
 
-    chain->insert(chain, chain->node_new(chain, "test"), "_", true);
-    chain->insert(chain, chain->node_new(chain, "test"), "_", true);
-    chain->insert(chain, chain->node_new(chain, "test2"), "_", false);
+//    chain->insert(chain, chain->node_new(chain, "test"), "tail", true);
+//    chain->insert(chain, chain->node_new(chain, "test"), "tail", true);
+//    chain->insert(chain, chain->node_new(chain, "test2"), "tail", false);
     chain->insert(chain, chain->node_new(chain, "test2"), "head", false);
     chain->append(chain, chain->node_new(chain, "testa"));
+    chain->append(chain, chain->node_new(chain, "tests"));
 
-//    chain_node_t *node = chain->head;
-//    while(node != chain->tail->next_node) {
-//        printf("%s\n", node->name);
-//        node = node->next_node;
-//    }
-
+    //chain->rm_node(chain, "testa", NULL);
+    chain_poll(chain, true);
+    chain_remove_all(chain);
     chain_poll(chain, true);
 
-    printf("%s\n",IS_TRUE(chain->find_node(chain, "hotakus", true) == NULL));
 
 //    chain->tail->next_node = chain->find_node(chain, "_", true);
 //    chain->check_loop(chain, false);
@@ -565,5 +565,5 @@ void chain_test() {
 //    printf("junction name: %s\n", chain->loop_info->junction_node->name);
 //    printf("end node name: %s\n", chain->get_loop_end(chain)->name);
 
-   // chain_destroy(chain);
+    //chain_destroy(chain);
 }

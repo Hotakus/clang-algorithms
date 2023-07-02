@@ -55,9 +55,7 @@ int hash_table_put(hash_table_t *ht, char *key, void *value) {
     if (ht->map[index].pair.name == NULL) {
         ht->map[index].pair.name = key;
         ht->map[index].pair.data = value;
-        printf("null put\n");
     } else if (BA_STRCMP(ht->map[index].pair.name, key) != 0) {
-        printf("collision put\n");
         // collision
         if (ht->map[index].entry == NULL)
             ht->map[index].entry = chain_create(NULL);
@@ -65,10 +63,8 @@ int hash_table_put(hash_table_t *ht, char *key, void *value) {
         hash_table_key_value_t *pair = entry->node_new(entry, key);
         pair->data = value;
         entry->append(entry, pair);
-    } else if (BA_STRCMP(ht->map[index].pair.name, key) == 0) {
-        printf("equal put\n");
+    } else if (BA_STRCMP(ht->map[index].pair.name, key) == 0)
         ht->map[index].pair.data = value;
-    }
 
     ht->cur_size += 1;
 
@@ -82,7 +78,8 @@ hash_table_key_value_t *hash_table_get(hash_table_t *ht, char *key) {
     int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
 
     if (ht->map[index].pair.name == NULL) {
-        return NULL;
+        hash_table_collision_entry_t *entry = ht->map[index].entry;
+        return entry ? entry->find_node(entry, key, true) : NULL;
     } else {
         int res = BA_STRCMP(ht->map[index].pair.name, key);
         if (res == 0)
@@ -90,6 +87,36 @@ hash_table_key_value_t *hash_table_get(hash_table_t *ht, char *key) {
         else {
             hash_table_collision_entry_t *entry = ht->map[index].entry;
             return entry ? entry->find_node(entry, key, true) : NULL;
+        }
+    }
+}
+
+
+void hash_table_remove(hash_table_t *ht, char *key) {
+
+    if (!ht) {
+        return;
+    }
+
+    if (!key) {
+        return;
+    }
+
+    int _hash_code = hash_code_fnv1a(key);
+    int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
+
+    if (ht->map[index].pair.name == NULL) {
+        hash_table_collision_entry_t *entry = ht->map[index].entry;
+        if (!entry) return;
+        entry->rm_node(entry, key, NULL);
+    } else {
+        int res = BA_STRCMP(ht->map[index].pair.name, key);
+        if (res == 0)
+            ht->map[index].pair.name = NULL;
+        else {
+            hash_table_collision_entry_t *entry = ht->map[index].entry;
+            if (!entry) return;
+            entry->rm_node(entry, key, NULL);
         }
     }
 }
@@ -117,8 +144,12 @@ void hash_test() {
     printf("%s: %d\n", pair3->name, *(int *) pair3->data);
     printf("%s: %d\n", pair4->name, *(int *) pair4->data);
 
+    hash_table_remove(ht, "hello4");
+
     ht->map[0].entry->poll(ht->map[0].entry, true);
     ht->map[1].entry->poll(ht->map[1].entry, true);
 
     hash_table_free(ht);
+    //ht->map[1].entry
 }
+
