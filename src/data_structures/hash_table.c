@@ -8,6 +8,7 @@
   */
 
 #include <stdio.h>
+#include <sys/time.h>
 #include "hash_table.h"
 #include "./include/chain.h"
 
@@ -51,6 +52,7 @@ void hash_table_destroy(hash_table_t *ht) {
     free(ht);
 }
 
+int cnt = 0;
 
 int hash_table_put(hash_table_t *ht, char *key, void *value) {
     if (!ht) {
@@ -77,13 +79,14 @@ int hash_table_put(hash_table_t *ht, char *key, void *value) {
 
         // find the collision chain
         ht_key_value_t *_find_kv = entry->find_node(entry, key, true);
-        if (_find_kv)  {
+        if (_find_kv) {
             _find_kv->data = value;
             return index;
         }
         ht_key_value_t *pair = entry->node_new(entry, key);
         pair->data = value;
         entry->append(entry, pair);
+        cnt++;
     } else if (BA_STRCMP(ht->map[index].pair.name, key) == 0)
         ht->map[index].pair.data = value;
 
@@ -107,6 +110,7 @@ ht_key_value_t *hash_table_get(hash_table_t *ht, char *key) {
             return &ht->map[index].pair;
         else {
             hash_table_collision_entry_t *entry = ht->map[index].entry;
+            if (BA_STRCMP("8145143", key) == 0) printf("collision get %d\n", index);
             return entry ? entry->find_node(entry, key, true) : NULL;
         }
     }
@@ -153,32 +157,88 @@ void hash_table_clear(hash_table_t *ht) {
 
 
 void hash_test() {
-    int a = 114514;
-    int b = 1145142;
-    int c = 904;
-    hash_table_t *ht = hash_table_create("test_hash", 1);
+    int a = 996;
+    int b = 114514;
+    struct timeval begin, end;
+    long long int dif_sec = 0;
+    long long int dif_usec = 0;
+    ssize_t res = 0;
+    int test_nums = 10000000;
 
-    ht->put(ht, "hello1", &a);
-    ht->put(ht, "hello2", &b);
-    ht->put(ht, "hello3", &c);
-    ht->put(ht, "hello4", &c);
+    printf("Testing: %d\n", test_nums);
 
-    ht_key_value_t *pair1 = ht->get(ht, "hello1");
-    ht_key_value_t *pair2 = ht->get(ht, "hello2");
-    ht_key_value_t *pair3 = ht->get(ht, "hello3");
-    ht_key_value_t *pair4 = ht->get(ht, "hello4");
+    // create test
+    gettimeofday(&begin, NULL);
+    hash_table_t *ht = hash_table_create("hash_table1", test_nums * 50);
+    gettimeofday(&end, NULL);
+    dif_sec = end.tv_sec - begin.tv_sec;
+    dif_usec = end.tv_usec - begin.tv_usec;
+    res = dif_sec * 1000000 + dif_usec;
+    printf("Create elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
+
+    // Malloc test
+    gettimeofday(&begin, NULL);
+    char **keys = calloc(test_nums, sizeof(char *));
+    for (int i = 0; i < test_nums; ++i) {
+        keys[i] = calloc(10, sizeof(char));
+        sprintf(keys[i], "%d", i);
+    }
+    gettimeofday(&end, NULL);
+    dif_sec = end.tv_sec - begin.tv_sec;
+    dif_usec = end.tv_usec - begin.tv_usec;
+    res = dif_sec * 1000000 + dif_usec;
+    printf("Malloc elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
+
+    // Put test
+    gettimeofday(&begin, NULL);
+    for (int i = 0; i < test_nums; ++i) {
+        ht->put(ht, keys[i], &a);
+    }
+    gettimeofday(&end, NULL);
+    dif_sec = end.tv_sec - begin.tv_sec;
+    dif_usec = end.tv_usec - begin.tv_usec;
+    res = dif_sec * 1000000 + dif_usec;
+    printf("Put    elapsed time: %lld secs, %lld ms, %lld us (collision: %d)\n", (res / 1000000), (res / 1000), res, cnt);
+
+    // collision chain max length
+    int max = 0;
+    gettimeofday(&begin, NULL);
+    for (int i = 0; i < test_nums; ++i) {
+        if (ht->map[i].entry)
+            max = MAX(ht->map[i].entry->length, max);
+    }
+    gettimeofday(&end, NULL);
+    dif_sec = end.tv_sec - begin.tv_sec;
+    dif_usec = end.tv_usec - begin.tv_usec;
+    res = dif_sec * 1000000 + dif_usec;
+    printf("Max collision length: %d\n", max);
+
+    // get test
+    gettimeofday(&begin, NULL);
+    for (int i = 0; i < test_nums; ++i) {
+        ht_key_value_t *pair = ht->get(ht, keys[i]);
+    }
+    gettimeofday(&end, NULL);
+    dif_sec = end.tv_sec - begin.tv_sec;
+    dif_usec = end.tv_usec - begin.tv_usec;
+    res = dif_sec * 1000000 + dif_usec;
+    printf("Get    elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
+
+    // random test
+    srand((unsigned) time(NULL));
+    int r = rand();
+    ht->put(ht, keys[r], &b);
+    ht_key_value_t *pair = ht->get(ht, keys[r]);
+    printf("Random find: %s - %d (%s)\n", pair->name, *(int *) pair->data, IS_TRUE(b == (*(int *) pair->data)));
 
 
-    printf("%s: %d\n", pair1->name, *(int *) pair1->data);
-    printf("%s: %d\n", pair2->name, *(int *) pair2->data);
-    printf("%s: %d\n", pair3->name, *(int *) pair3->data);
-    printf("%s: %d\n", pair4->name, *(int *) pair4->data);
-
-    ht->remove(ht, "hello4");
-
-    ht->map[0].entry->poll(ht->map[0].entry, true);
-    ht->map[1].entry->poll(ht->map[1].entry, true);
-
+    // destroy test
+    gettimeofday(&begin, NULL);
     hash_table_destroy(ht);
+    gettimeofday(&end, NULL);
+    dif_sec = end.tv_sec - begin.tv_sec;
+    dif_usec = end.tv_usec - begin.tv_usec;
+    res = dif_sec * 1000000 + dif_usec;
+    printf("Destro elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
 }
 

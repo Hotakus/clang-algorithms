@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <sys/time.h>
 #include "main.h"
 
 void fun_test() {
@@ -71,13 +72,9 @@ void fun_test() {
 }
 
 
+
+
 int main() {
-
-    size_t cost_time2 = run_time(COUNT_TIME_US, hash_test);
-    run_time_show(&cost_time2);
-
-    //chain_test();
-
-    // fun_test();
+    hash_test();
     return 0;
 }

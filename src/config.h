@@ -6,7 +6,7 @@
  * 0 : disable
  */
 
-#define DEBUG 1
+#define DEBUG 0
 
 // chain
 #define USE_CHAIN_SEM 0
