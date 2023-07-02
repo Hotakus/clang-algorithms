@@ -20,8 +20,8 @@ hash_table_t *hash_table(char *desc, size_t pre_size) {
 
     // 若 pre size 不为0，则分配指定长度的map
     if (pre_size) {
-        ht->valid_size = pre_size;
-        ht->map = (hash_table_entry_t *) calloc(pre_size + 1, sizeof(hash_table_entry_t));
+        ht->valid_size = pre_size + 1;
+        ht->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
     }
 
     return ht;
@@ -49,7 +49,7 @@ int hash_table_put(hash_table_t *ht, char *key, void *value) {
 
     // calculate the hash code.
     int _hash_code = hash_code_fnv1a(key);
-    int index = hash_limit(_hash_code, (int) ht->valid_size);
+    int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
 
     // determine whether entry was occupied.
     if (ht->map[index].pair.name == NULL) {
@@ -79,7 +79,7 @@ int hash_table_put(hash_table_t *ht, char *key, void *value) {
 hash_table_key_value_t *hash_table_get(hash_table_t *ht, char *key) {
     if (!key) return NULL;
     int _hash_code = hash_code_fnv1a(key);
-    int index = hash_limit(_hash_code, (int) ht->valid_size);
+    int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
 
     if (ht->map[index].pair.name == NULL) {
         return NULL;
