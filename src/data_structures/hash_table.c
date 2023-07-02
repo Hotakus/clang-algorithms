@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file           : hash_table.c
+  * @file           : hash_table_create.c
   * @author         : Hotakus (hotakus@foxmail.com)
   * @brief          : None
   * @date           : 2023/7/2
@@ -12,7 +12,14 @@
 #include "./include/chain.h"
 
 
-hash_table_t *hash_table(char *desc, size_t pre_size) {
+static int hash_table_put(hash_table_t *ht, char *key, void *value);
+static ht_key_value_t *hash_table_get(hash_table_t *ht, char *key);
+static void hash_table_remove(hash_table_t *ht, char *key);
+static void hash_table_rehash(hash_table_t *ht);
+static void hash_table_clear(hash_table_t *ht);
+
+
+hash_table_t *hash_table_create(char *desc, size_t pre_size) {
     hash_table_t *ht = (hash_table_t *) calloc(1, sizeof(hash_table_t));
     ht->cur_size = 0;
     ht->valid_size = 0;
@@ -24,10 +31,17 @@ hash_table_t *hash_table(char *desc, size_t pre_size) {
         ht->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
     }
 
+    // default method for hash table
+    ht->put = hash_table_put;
+    ht->get = hash_table_get;
+    ht->remove = hash_table_remove;
+    ht->rehash = hash_table_rehash;
+    ht->clear = hash_table_clear;
+
     return ht;
 }
 
-void hash_table_free(hash_table_t *ht) {
+void hash_table_destroy(hash_table_t *ht) {
     if (ht->map) {
         for (int i = 0; i < ht->valid_size; ++i)
             if (ht->map[i].entry)
@@ -60,7 +74,7 @@ int hash_table_put(hash_table_t *ht, char *key, void *value) {
         if (ht->map[index].entry == NULL)
             ht->map[index].entry = chain_create(NULL);
         hash_table_collision_entry_t *entry = ht->map[index].entry;
-        hash_table_key_value_t *pair = entry->node_new(entry, key);
+        ht_key_value_t *pair = entry->node_new(entry, key);
         pair->data = value;
         entry->append(entry, pair);
     } else if (BA_STRCMP(ht->map[index].pair.name, key) == 0)
@@ -72,7 +86,7 @@ int hash_table_put(hash_table_t *ht, char *key, void *value) {
 }
 
 
-hash_table_key_value_t *hash_table_get(hash_table_t *ht, char *key) {
+ht_key_value_t *hash_table_get(hash_table_t *ht, char *key) {
     if (!key) return NULL;
     int _hash_code = hash_code_fnv1a(key);
     int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
@@ -121,22 +135,30 @@ void hash_table_remove(hash_table_t *ht, char *key) {
     }
 }
 
+void hash_table_rehash(hash_table_t *ht) {
+
+}
+
+void hash_table_clear(hash_table_t *ht) {
+
+}
+
 
 void hash_test() {
     int a = 114514;
     int b = 1145142;
     int c = 904;
-    hash_table_t *ht = hash_table("test_hash", 1);
+    hash_table_t *ht = hash_table_create("test_hash", 1);
 
-    hash_table_put(ht, "hello1", &a);
-    hash_table_put(ht, "hello2", &b);
-    hash_table_put(ht, "hello3", &c);
-    hash_table_put(ht, "hello4", &c);
+    ht->put(ht, "hello1", &a);
+    ht->put(ht, "hello2", &b);
+    ht->put(ht, "hello3", &c);
+    ht->put(ht, "hello4", &c);
 
-    hash_table_key_value_t *pair1 = hash_table_get(ht, "hello1");
-    hash_table_key_value_t *pair2 = hash_table_get(ht, "hello2");
-    hash_table_key_value_t *pair3 = hash_table_get(ht, "hello3");
-    hash_table_key_value_t *pair4 = hash_table_get(ht, "hello4");
+    ht_key_value_t *pair1 = ht->get(ht, "hello1");
+    ht_key_value_t *pair2 = ht->get(ht, "hello2");
+    ht_key_value_t *pair3 = ht->get(ht, "hello3");
+    ht_key_value_t *pair4 = ht->get(ht, "hello4");
 
 
     printf("%s: %d\n", pair1->name, *(int *) pair1->data);
@@ -149,7 +171,6 @@ void hash_test() {
     ht->map[0].entry->poll(ht->map[0].entry, true);
     ht->map[1].entry->poll(ht->map[1].entry, true);
 
-    hash_table_free(ht);
-    //ht->map[1].entry
+    hash_table_destroy(ht);
 }
 
