@@ -74,6 +74,13 @@ int hash_table_put(hash_table_t *ht, char *key, void *value) {
         if (ht->map[index].entry == NULL)
             ht->map[index].entry = chain_create(NULL);
         hash_table_collision_entry_t *entry = ht->map[index].entry;
+
+        // find the collision chain
+        ht_key_value_t *_find_kv = entry->find_node(entry, key, true);
+        if (_find_kv)  {
+            _find_kv->data = value;
+            return index;
+        }
         ht_key_value_t *pair = entry->node_new(entry, key);
         pair->data = value;
         entry->append(entry, pair);
