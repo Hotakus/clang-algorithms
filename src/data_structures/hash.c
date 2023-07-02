@@ -17,16 +17,16 @@
  * @param key 要计算的字符串键值
  * @return hash code
  */
-int hash_code_fnv1a(char *key) {
-    int _hash_code = OFFSET_BASIS_32;
+int32_t hash_code_fnv1a(char *key) {
+    int _hash_code = OFFSET_BASIS;
     for (int i = 0; i < BA_STRLEN(key); ++i) {
         _hash_code ^= key[i];
-        _hash_code *= FNV_PRIME_32;
+        _hash_code *= FNV_PRIME;
     }
     return _hash_code;
 }
 
-int hash_downgrade(int code, int bits) {
+int32_t hash_downgrade(int32_t code, int bits) {
     return abs((code >> bits) ^ (code & ((1 << bits) - 1)));
 }
 
@@ -36,6 +36,6 @@ int hash_downgrade(int code, int bits) {
  * @param max hash最大值
  * @return 限值后的hash code
  */
-int hash_limit(int code, int max) {
+int32_t hash_limit(int32_t code, int max) {
     return abs(code % (max + 1));
 }

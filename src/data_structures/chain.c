@@ -555,13 +555,15 @@ void chain_test() {
 
     chain_poll(chain, true);
 
-    chain->tail->next_node = chain->find_node(chain, "_", true);
-    chain->check_loop(chain, false);
-    printf("chain length: %zu\n", chain->length);
-    printf("chain_has_loop: %d\n", chain->has_loop);
-    printf("loop length: %zu\n", chain->loop_info->length);
-    printf("junction name: %s\n", chain->loop_info->junction_node->name);
-    printf("end node name: %s\n", chain->get_loop_end(chain)->name);
+    printf("%s\n",IS_TRUE(chain->find_node(chain, "hotakus", true) == NULL));
 
-    chain_destroy(chain);
+//    chain->tail->next_node = chain->find_node(chain, "_", true);
+//    chain->check_loop(chain, false);
+//    printf("chain length: %zu\n", chain->length);
+//    printf("chain_has_loop: %d\n", chain->has_loop);
+//    printf("loop length: %zu\n", chain->loop_info->length);
+//    printf("junction name: %s\n", chain->loop_info->junction_node->name);
+//    printf("end node name: %s\n", chain->get_loop_end(chain)->name);
+
+   // chain_destroy(chain);
 }

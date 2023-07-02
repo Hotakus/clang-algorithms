@@ -5,4 +5,4 @@ include_directories(include LIB_INC )
 include_directories(. LIB_INC)
 
 # 生成链接库
-add_library (datastructures ${LIB_SRCS} ${LIB_INC} ds.h)
+add_library (datastructures ${LIB_SRCS} ${LIB_INC})

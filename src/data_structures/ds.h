@@ -12,7 +12,7 @@
 
 #include "./include/chain.h"
 #include "./include/stack.h"
-#include "./include/hash.h"
+#include "./include/hash_table.h"
 
 #ifdef __cplusplus
 extern "C" {
