@@ -169,7 +169,7 @@ void hash_test() {
 
     // create test
     gettimeofday(&begin, NULL);
-    hash_table_t *ht = hash_table_create("hash_table1", test_nums * 50);
+    hash_table_t *ht = hash_table_create("hash_table1", test_nums);
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;
     dif_usec = end.tv_usec - begin.tv_usec;
