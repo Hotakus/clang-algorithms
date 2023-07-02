@@ -2,15 +2,13 @@
 #define CODEWAR_KATA_C_BA_H
 
 
-#include "config.h"
+#include "../config.h"
 
-#include "include/chain.h"
 #include "include/sort.h"
 #include "include/dict.h"
 #include "include/utilities.h"
 #include "include/bit.h"
-#include "./include/h_math.h"
-#include "include/stack.h"
+#include "include/h_math.h"
 #include "include/queue.h"
 
 #ifdef __cplusplus

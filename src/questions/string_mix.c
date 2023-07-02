@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "../basic_algorithm/config.h"
+#include "../config.h"
 #include "include/string_mix.h"
 
 char *string_mix(const char *s1, const char *s2) {

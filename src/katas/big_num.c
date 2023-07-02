@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 #include "big_num.h"
-#include "../basic_algorithm//ba.h"
+#include "../algorithms/ba.h"
 
 
 /**

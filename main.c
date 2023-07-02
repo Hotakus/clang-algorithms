@@ -71,8 +71,14 @@ void fun_test() {
 }
 
 
-
 int main() {
-    fun_test();
+
+    char *key = "hello_8";
+    int hc = hash_code_fnv1a(key);
+    printf("%d\n", hc);
+    hc= hash_limit(hc, 100);
+    printf("%d\n", hc);
+
+    // fun_test();
     return 0;
 }

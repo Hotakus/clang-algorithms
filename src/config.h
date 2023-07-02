@@ -21,7 +21,7 @@
 #define BA_STRCPY(dst, src)     strcpy(dst, src)
 #define BA_STRCHR(ch, str)      strchr(ch, str)
 #else
-#include "./include/utilities.h"
+#include "algorithms/include/utilities.h"
 #define BA_STRCMP(str1, str2)   str_cmp(str1, str2)
 #define BA_STRLEN(str)          str_len(str)
 #define BA_STRCPY(dst, src)     str_cpy(dst, src)

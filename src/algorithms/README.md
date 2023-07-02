@@ -5,8 +5,8 @@
 
 ## Data Structure
 
-1. [Chain](chain.c)
-2. [Stack](stack.c)
+1. [Chain](../data_structures/chain.c)
+2. [Stack](../data_structures/stack.c)
 3. [Queue](queue.c)
 4. [Dict](dict.c)
 

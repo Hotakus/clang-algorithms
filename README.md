@@ -8,7 +8,7 @@ Containing some my codewars' code and some utile algorithms.
 
 Click links below to see details.
 
-- **[Basic algorithm](./src/basic_algorithm)**: contains some base algorithms such as chain or sort etc.
+- **[Basic algorithm](./src/algorithms)**: contains some base algorithms such as chain or sort etc.
 - **[Katas](./src/katas)**: contains some katas to solve designated problem.
 - **[Questions](./src/questions)**: some miscellaneous questions in CodeWars.
 - **[CMakeLists.txt](CMakeLists.txt)**: compiles project to static libraries, and you can run 'main' in bin to test functions.

@@ -9,7 +9,7 @@
   */
 
 #include "determine_prime.h"
-#include "../basic_algorithm/ba.h"
+#include "../algorithms/ba.h"
 
 bool prime_determine(int num, bool opt) {
     if (num <= 1)

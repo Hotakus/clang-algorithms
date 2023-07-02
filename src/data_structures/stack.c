@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "stack.h"
-#include "config.h"
+#include "../config.h"
 
 #define FIRST_LAYER_NAME "first_element"
 

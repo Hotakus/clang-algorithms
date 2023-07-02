@@ -64,7 +64,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin) # 可执行文件
 set(SRCS_DIR ${PROJECT_SOURCE_DIR}/src/)
 aux_source_directory(. ROOT_SRCS)
 add_subdirectory(${SRCS_DIR}/katas)
-add_subdirectory(${SRCS_DIR}/basic_algorithm)
+add_subdirectory(${SRCS_DIR}/data_structures)
+add_subdirectory(${SRCS_DIR}/algorithms)
 add_subdirectory(${SRCS_DIR}/questions)
 
 # lib postfix

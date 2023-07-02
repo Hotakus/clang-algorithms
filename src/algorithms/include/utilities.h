@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../config.h"
+#include "../../config.h"
 
 #ifdef __cplusplus
 extern "C" {

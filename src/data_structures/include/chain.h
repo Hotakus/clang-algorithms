@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../config.h"
+#include "../../config.h"
 
 #if USE_CHAIN_SEM == 1
 #include <semaphore.h>

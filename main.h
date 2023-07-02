@@ -1,7 +1,8 @@
 #ifndef CODEWAR_KATA_C_MAIN_H
 #define CODEWAR_KATA_C_MAIN_H
 
-#include "./src/basic_algorithm/ba.h"
+#include "./src/algorithms/ba.h"
+#include "./src/data_structures/ds.h"
 #include "./src/katas/katas.h"
 #include "./src/questions/questions.h"
 

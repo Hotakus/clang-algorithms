@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lcs.h"
-#include "../basic_algorithm/config.h"
+#include "../config.h"
 
 
 /**
