@@ -18,7 +18,6 @@
 
 // 最大冲突比
 #define HASH_TABLE_COLLISION_MAX_RADIO (0.375f)
-
 // 最高性能倍数，大约为最大冲突比的10倍，过高或过低会导致性能下降
 #define HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE (HASH_TABLE_COLLISION_MAX_RADIO * 10)
 
@@ -29,6 +28,7 @@ extern "C" {
 typedef chain_t hash_table_collision_entry_t;
 typedef chain_node_t ht_key_value_t;
 
+/* Methods typedef -- Begin */
 typedef struct hash_table_t hash_table_t;
 typedef struct hash_table_entry_t hash_table_entry_t;
 
@@ -38,20 +38,26 @@ typedef ht_key_value_t *(hash_table_get_t)(hash_table_t *ht, char *key);
 typedef void (hash_table_remove_t)(hash_table_t *ht, char *key);
 typedef void (hash_table_rehash_t)(hash_table_t *ht, size_t new_size);
 typedef void (hash_table_clear_t)(hash_table_t *ht);
+/* Set and Get -- Begin */
+typedef void (hash_table_set_ar_t)(hash_table_t *ht, bool ar);
+typedef bool (hash_table_get_ar_t)(hash_table_t *ht         );
+/* Set and Get --  End */
+/* Methods typedef --  End */
 
+/* Hash table typedef -- Begin */
 typedef struct hash_table_entry_t {
     ht_key_value_t pair;                    // 键值对
     hash_table_collision_entry_t *entry;    // 冲突链表入口
 } hash_table_entry_t;
 
 typedef struct hash_table_t {
-    // 公共变量
+    /* 公共变量 */
     char *desc;
     size_t cur_size;            // 当前哈希表的总数据size
     size_t valid_size;          // 当前哈希表的有效size
     size_t collision_cnt;       // 当前哈希表冲突数量
 
-    // 公共 methods
+    /* 公共 methods */
     struct {
         hash_table_limit_t *limit;
         hash_table_put_t *put;
@@ -59,11 +65,18 @@ typedef struct hash_table_t {
         hash_table_remove_t *remove;
         hash_table_rehash_t *rehash;
         hash_table_clear_t *clear;
+
+        /* Set method */
+        hash_table_set_ar_t *set_ar;    // set auto rehash
+
+        /* Get method */
+        hash_table_get_ar_t *get_ar;    // get auto rehash
     };
 
     // 私有变量结构体, 程序调用，别修改
     private *pri;
 } hash_table_t;
+/* Hash table typedef --  End */
 
 // 对外暴露的方法
 hash_table_t *hash_table_create(char *desc, size_t pre_size);
@@ -76,5 +89,4 @@ void hash_test ();
 #ifdef __cplusplus
 }
 #endif // __cplusplus
-
 #endif  //CODEWAR_KATA_C_HASH_TABLE_H

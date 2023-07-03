@@ -21,10 +21,13 @@ static void hash_table_remove(hash_table_t *ht, char *key);
 static void hash_table_rehash(hash_table_t *ht, size_t new_size);
 static void hash_table_clear(hash_table_t *ht);
 
+static void hash_table_set_ar(hash_table_t *ht, bool ar);
+static bool hash_table_get_ar(hash_table_t *ht);
 
-// 私有变量
+// 私有变量结构体
 struct private {
     hash_table_entry_t *map;    // 当前哈希表映射
+    bool auto_rehash;           // 是否自动再散列，默认为 false
 };
 
 
@@ -42,11 +45,16 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
     ht->desc = desc;
 
     // 若 pre size 不为0，则分配指定长度的map
-    if (pre_size) {
-        ht->valid_size = pre_size;
-        ht->pri = calloc(1, sizeof(private));
-        ht->pri->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
+    if (!pre_size) {
+        free(ht);
+        ht = NULL;
+        return ht;
     }
+
+    ht->valid_size = pre_size;
+    ht->pri = calloc(1, sizeof(private));
+    ht->pri->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
+    ht->pri->auto_rehash = false;
 
     // default method for hash table
     ht->limit = hash_table_limit;
@@ -55,6 +63,9 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
     ht->remove = hash_table_remove;
     ht->rehash = hash_table_rehash;
     ht->clear = hash_table_clear;
+
+    ht->set_ar = hash_table_set_ar;
+    ht->get_ar = hash_table_get_ar;
 
     return ht;
 }
@@ -114,16 +125,19 @@ void hash_table_limit(hash_table_t *ht, size_t limit_size) {
  * @return 哈希map索引
  */
 int hash_table_put(hash_table_t *ht, const char *key, void *value) {
+
     // 若冲突总数值占有效空间数值的比例大于允许比例，则进行再散列
-    float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
-    if (ratio > HASH_TABLE_COLLISION_MAX_RADIO) {
+    if (ht->pri->auto_rehash) {
+        float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
+        if (ratio > HASH_TABLE_COLLISION_MAX_RADIO) {
 #if HASH_TEST == 1
-        printf("1 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, ratio);
+            printf("1 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, ratio);
 #endif
-        hash_table_rehash(ht, (int)((float)ht->valid_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+            hash_table_rehash(ht, (int)((float)ht->valid_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
 #if HASH_TEST == 1
-        printf("2 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, (float)ht->collision_cnt / (float)ht->valid_size);
+            printf("2 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, (float)ht->collision_cnt / (float)ht->valid_size);
 #endif
+        }
     }
 
     // calculate the hash code.
@@ -278,6 +292,17 @@ void hash_table_rehash(hash_table_t *ht, size_t new_size) {
     chain_destroy(temp_entry);
 }
 
+
+void hash_table_set_ar(hash_table_t *ht, bool ar) {
+    ht->pri->auto_rehash = ar;
+}
+
+
+bool hash_table_get_ar(hash_table_t *ht) {
+    return ht->pri->auto_rehash;
+}
+
+
 #if HASH_TEST == 1
 void hash_test() {
 
@@ -353,6 +378,7 @@ void hash_test() {
     // create test
     gettimeofday(&begin, NULL);
     hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+    ht->set_ar(ht, true);
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;
     dif_usec = end.tv_usec - begin.tv_usec;
