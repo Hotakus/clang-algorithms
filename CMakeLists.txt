@@ -62,25 +62,34 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin) # 可执行文件
 
 # 添加子目录
 set(SRCS_DIR ${PROJECT_SOURCE_DIR}/src/)
+
+set(KATAS_SRC ${SRCS_DIR}/katas)
+set(DS_SRC ${SRCS_DIR}/data_structures)
+set(ALGORITHM_SRC ${SRCS_DIR}/algorithms)
+set(QUESTION_SRC ${SRCS_DIR}/questions)
+MESSAGE(STATUS "${DS_SRC}")
+
 aux_source_directory(. ROOT_SRCS)
-add_subdirectory(${SRCS_DIR}/katas)
-add_subdirectory(${SRCS_DIR}/data_structures)
-add_subdirectory(${SRCS_DIR}/algorithms)
-add_subdirectory(${SRCS_DIR}/questions)
+add_subdirectory(${KATAS_SRC})
+add_subdirectory(${DS_SRC})
+add_subdirectory(${ALGORITHM_SRC})
+add_subdirectory(${QUESTION_SRC})
 
 # lib postfix
-set(CMAKE_DEBUG_POSTFIX "_debug")
+#set(CMAKE_DEBUG_POSTFIX "_debug")
 #set(CMAKE_RELEASE_POSTFIX "_release")
 
 # 可执行文件
 #set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "_debug")
-# set_target_properties(${TARGET_NAME} PROPERTIES RELEASE_POSTFIX "_r")
-add_executable(main ${ROOT_SRCS})
+#set_target_properties(${TARGET_NAME} PROPERTIES RELEASE_POSTFIX "_r")
+# add_executable(hca ${ROOT_SRCS})
+add_library(hca ${ROOT_SRCS})
 
 # 链接库
-target_link_libraries(main hba)
-target_link_libraries(main katas)
-target_link_libraries(main questions)
+target_link_libraries(hca hba)
+target_link_libraries(hca katas)
+target_link_libraries(hca questions)
+target_link_libraries(hca datastructures)
 
 # 测试信息
 #message("PROJECT_BINARY_DIR ${PROJECT_BINARY_DIR}")
