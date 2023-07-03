@@ -122,9 +122,9 @@ chain_t *chain_create(char *desc) {
     chain->is_loop = false;
 
     // create head and tail nodes.
-    chain->length = 0;  // head and tail
     chain->head = node_create(chain, "head");
     chain->tail = node_create(chain, "tail");
+    chain->length = 0;  // head and tail
 
     chain->head->prev_node = NULL;
     chain->head->next_node = chain->tail;
@@ -201,7 +201,7 @@ void chain_remove_all(chain_t *chain) {
     chain->head->next_node = chain->tail;
     chain->tail->prev_node = chain->head;
 
-    chain->length = 2;
+    chain->length = 0;
 }
 
 
@@ -411,7 +411,7 @@ static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool for
  */
 bool chain_has_loop(chain_t *chain, bool detach) {
 
-    if (chain->length == 2) {
+    if (chain->length == 0) {
 #if DEBUG == 1
         printf("chain_has_loop: chain is empty\n");
 #endif // DEBUG
@@ -559,7 +559,7 @@ void chain_test() {
 
 //    chain->tail->next_node = chain->find_node(chain, "_", true);
 //    chain->check_loop(chain, false);
-//    printf("chain length: %zu\n", chain->length);
+    printf("chain length: %zu\n", chain->length);
 //    printf("chain_has_loop: %d\n", chain->has_loop);
 //    printf("loop length: %zu\n", chain->loop_info->length);
 //    printf("junction name: %s\n", chain->loop_info->junction_node->name);
