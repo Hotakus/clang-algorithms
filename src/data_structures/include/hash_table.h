@@ -18,7 +18,7 @@
 
 // 最大冲突比
 #define HASH_TABLE_COLLISION_MAX_RADIO (0.375f)
-// 最高性能倍数，大约为最大冲突比的10倍，过高或过低会导致性能下降
+// 最高性能倍数，大约为最大冲突比的10倍，过高或过低会导致平均性能下降，数量级越高越明显
 #define HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE (HASH_TABLE_COLLISION_MAX_RADIO * 10)
 
 #ifdef __cplusplus

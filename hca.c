@@ -6,6 +6,8 @@
 #include <sys/time.h>
 #include "hca.h"
 
+
+#ifdef HCA_TEST
 void hca_test() {
     char *str1 = NULL;
     char *str2 = NULL;
@@ -70,3 +72,10 @@ void hca_test() {
     free(res1);
     printf("------------------ String Mix ( End ) ------------------\n\n");
 }
+
+int main() {
+    // hca_test();
+    hash_test(2000000);
+    return 0;
+}
+#endif

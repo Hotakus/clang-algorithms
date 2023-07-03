@@ -80,8 +80,12 @@ add_subdirectory(${QUESTION_SRC})
 # 可执行文件
 #set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "_debug")
 #set_target_properties(${TARGET_NAME} PROPERTIES RELEASE_POSTFIX "_r")
-# add_executable(hca ${ROOT_SRCS})
-add_library(hca STATIC ${ROOT_SRCS})
+if (HCA_TEST)
+    add_executable(hca ${ROOT_SRCS})
+else ()
+    add_library(hca STATIC ${ROOT_SRCS})
+endif ()
+
 
 # 链接库
 target_link_libraries(hca hba)
