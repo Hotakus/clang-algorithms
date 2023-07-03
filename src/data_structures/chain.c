@@ -79,8 +79,7 @@ chain_node_t *node_create(chain_t *chain, const char *name) {
     }
 #endif
 
-    chain->length += 1;
-    node->id = chain->length;
+    node->id = chain->length + 1;
 
 #if USE_CHAIN_SEM == 1
     sem_post(chain->nc_sem);
@@ -229,6 +228,8 @@ void chain_append(chain_t *chain, chain_node_t *node) {
         node->next_node = chain->tail;
         chain->tail->prev_node = node;
     }
+
+    chain->length += 1;
 }
 
 
