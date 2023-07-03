@@ -42,7 +42,7 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
 
     // 若 pre size 不为0，则分配指定长度的map
     if (pre_size) {
-        ht->valid_size = pre_size + 1;
+        ht->valid_size = pre_size;
         ht->pri = calloc(1, sizeof(private));
         ht->pri->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
     }
@@ -137,6 +137,7 @@ int hash_table_put(hash_table_t *ht, const char *key, void *value) {
     if (ht->pri->map[index].pair.name == NULL) {
         ht->pri->map[index].pair.name = key;
         ht->pri->map[index].pair.data = value;
+        ht->cur_size += 1;
     } else if (BA_STRCMP(ht->pri->map[index].pair.name, key) != 0) {
         // collision
         if (ht->pri->map[index].entry == NULL)
@@ -152,10 +153,9 @@ int hash_table_put(hash_table_t *ht, const char *key, void *value) {
         ht_key_value_t *pair = entry->node_new(key, value);
         entry->append(entry, pair);
         ht->collision_cnt += 1;
+        ht->cur_size += 1;
     } else if (BA_STRCMP(ht->pri->map[index].pair.name, key) == 0)
         ht->pri->map[index].pair.data = value;
-
-    ht->cur_size += 1;
 
     return index;
 }
