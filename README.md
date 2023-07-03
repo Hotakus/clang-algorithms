@@ -41,7 +41,7 @@ int main() {
 
 ---
 
-## Just compile
+## Only compile
 
 
 ```bash
