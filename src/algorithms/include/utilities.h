@@ -15,7 +15,6 @@ extern "C" {
 #define ARRAY_SIZE(arr)         (sizeof(arr)/sizeof(arr[0]))
 
 #define CAST_VAR_TO_STR(name) (#name)
-
 #define IS_TRUE(b)     ((b == true) ? "true" : "false")
 
 typedef void (_func_t)();
@@ -47,6 +46,7 @@ char *str_chr(char ch, char *str);
 long long int run_time(count_time_enum_t method, _func_t func);
 void run_time_show(const long long int *t);
 
+char *rand_string(int len);
 
 #ifdef __cplusplus
 }

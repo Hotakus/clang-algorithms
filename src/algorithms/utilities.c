@@ -212,3 +212,12 @@ long long int run_time(count_time_enum_t method, _func_t func) {
 void run_time_show(const long long int *t) {
     printf("Elapsed time: %lld secs, %lld ms, %lld us\n", (*t / 1000000), (*t / 1000), *t);
 }
+
+
+char *rand_string(int len) {
+    char *str = calloc(len + 1, sizeof(char));
+    for (int i = 0; i < len; ++i) {
+        str[i] = rand() % 26 + 'a';
+    }
+    return str;
+}
