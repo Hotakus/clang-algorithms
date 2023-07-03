@@ -72,8 +72,6 @@ void fun_test() {
 }
 
 
-
-
 int main() {
     hash_test();
     return 0;
