@@ -8,7 +8,7 @@
 1. [Chain](data_structures/chain.c)
 2. [Stack](data_structures/stack.c)
 3. [Queue](data_structures/queue.c)
-5. [Hash Table](data_structures/hash.c)
+5. [Hash Table](data_structures/hash_table.c)
 
 ---
 
