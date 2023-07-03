@@ -1,32 +1,49 @@
-# Codewars-c
+# Hotakus' Clang Algorithms
 
-Containing some my codewars' code and some utile algorithms.
+contains some useful algorithms adn data structures, and can help you 
+develop.
 
 ---
 
 ## Directory Structure
 
-Click links below to see details.
+Click links below to see details and API.
 
-- **[Algorithms](./src/algorithms)**: Some algorithms may be useful.
-- **[Data Structures](./src/algorithms)**: Some useful data structures. 
-- **[Katas](./src/katas)**: Some katas or tricks may be useful , such as MSE, LCS, Big Num problems.
-- **[Questions](./src/questions)**: Some miscellaneous questions that may be unuseful in CodeWars .
+- **[Algorithms](./src/algorithms) - ([Details](./src/README.md))**: Some algorithms may be useful.
+- **[Data Structures](./src/data_structures) - ([Details](./src/README.md))**: Some useful data structures. 
+- **[Katas](./src/katas) - ([Details](./src/katas/README.md))**: Some katas or tricks may be useful , such as MSE, LCS, Big Num problems.
+- **[Questions](./src/questions) - ([Details](./src/questions/README.md))**: Some miscellaneous questions that may be unuseful in CodeWars .
 - **[CMakeLists.txt](CMakeLists.txt)**: Compiles project to static libraries, and you can run 'main' in bin to test functions.
 
 ---
 
-## How to use this project?
+## How to use directly this project?
 
-Nice problem.  
+Nice problem, and easy to use.  
 
 You must fetch the repo to your project folder. and then, in `CmakeLists.txt` of your project (not this project),
 add these codes below:
 ```cmake
-
+add_subdirectory(./clang-algorithms/)
+add_executable(your_project_name main.c)
+target_link_libraries(your_project_name hca)
+```
+And then, in your `main.c`:
+```c
+#include <stdio.h>
+int main() {
+    printf("Welcome to use Hotakus' clang algorithms!!!\n")
+    hca_test();     // do test for some functions of hca.
+    hash_test();    // Hash table test
+    return 0;
+}
 ```
 
-First, compile the project:
+---
+
+## Just compile
+
+
 ```bash
 mkdir build
 cd build
@@ -43,7 +60,4 @@ make
 ```
 OK, all libs were compiled and move to "lib" folder in root path.
 
-Now, copy all libs to your own project.  
-Oh, don't forget copy each "include" folder in "src" folder to your project.
-
-And if you want, you can run main in "bin" folder to test all functions of this project.
+---
