@@ -11,7 +11,7 @@
 #define CODEWAR_KATA_C_QUEUE_H
 
 #include <stddef.h>
-#include "../../data_structures/include/chain.h"
+#include "chain.h"
 
 #ifdef __cplusplus
 extern "C" {

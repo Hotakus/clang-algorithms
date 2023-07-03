@@ -5,11 +5,10 @@
 #include "../config.h"
 
 #include "include/sort.h"
-#include "include/dict.h"
 #include "include/utilities.h"
 #include "include/bit.h"
 #include "include/h_math.h"
-#include "include/queue.h"
+#include "../data_structures/include/queue.h"
 
 #ifdef __cplusplus
 extern "C" {

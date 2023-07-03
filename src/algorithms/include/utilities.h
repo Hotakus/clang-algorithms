@@ -35,18 +35,21 @@ int alpha_find_times(const char *src, char ch);
 int str_cmp(const char *s1, const char *s2);
 void str_cpy(char *dest, const char *src);
 int str_len(const char *src);
-char *str_conn(char *s1, char *s2);
+char *str_rev(char *str, bool copy);
+char *str_chr(char ch, char *str);
+
 
 // str extra
 char **str_split(const char *src, char sep, int *wn);
 void str_split_free(char **buf);
-char *str_chr(char ch, char *str);
+char *rand_string(int len);
+char *str_conn(char *s1, char *s2);
 
 // miscellaneous
 long long int run_time(count_time_enum_t method, _func_t func);
 void run_time_show(const long long int *t);
 
-char *rand_string(int len);
+
 
 #ifdef __cplusplus
 }

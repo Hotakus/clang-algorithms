@@ -221,3 +221,31 @@ char *rand_string(int len) {
     }
     return str;
 }
+
+
+/**
+ * 逆序字符串
+ * @param str 要操作的字符串
+ * @param copy 是否要进行拷贝，true则拷贝新到buf，false则改变原字符串
+ * @return 返回逆序后的字符串
+ */
+char *str_rev(char *str, bool copy) {
+    char *buf = str;
+    int len = BA_STRLEN(str);
+    if (copy) {
+        buf = (char *) calloc(len + 1, sizeof(char));
+        BA_STRCPY(buf, str);
+    }
+
+    char *p_begin = buf;
+    char *p_end = &buf[len - 1];
+
+    for (int i = 0; i < len / 2; ++i) {
+        char tmp = *p_begin;
+        *p_begin++ = *p_end;
+        *p_end-- = tmp;
+    }
+
+    return buf;
+}
+

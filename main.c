@@ -73,6 +73,11 @@ void fun_test() {
 
 
 int main() {
-    hash_test();
+    //hash_test();
+
+    char *res = str_rev("hellob", true);
+
+    printf("result: %s\n", res);
+
     return 0;
 }

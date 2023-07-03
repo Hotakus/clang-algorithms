@@ -8,16 +8,24 @@ Containing some my codewars' code and some utile algorithms.
 
 Click links below to see details.
 
-- **[Basic algorithm](./src/algorithms)**: contains some base algorithms such as chain or sort etc.
-- **[Katas](./src/katas)**: contains some katas to solve designated problem.
-- **[Questions](./src/questions)**: some miscellaneous questions in CodeWars.
-- **[CMakeLists.txt](CMakeLists.txt)**: compiles project to static libraries, and you can run 'main' in bin to test functions.
+- **[Algorithms](./src/algorithms)**: Some algorithms may be useful.
+- **[Data Structures](./src/algorithms)**: Some useful data structures. 
+- **[Katas](./src/katas)**: Some katas or tricks may be useful , such as MSE, LCS, Big Num problems.
+- **[Questions](./src/questions)**: Some miscellaneous questions that may be unuseful in CodeWars .
+- **[CMakeLists.txt](CMakeLists.txt)**: Compiles project to static libraries, and you can run 'main' in bin to test functions.
 
 ---
 
 ## How to use this project?
 
 Nice problem.  
+
+You must fetch the repo to your project folder. and then, in `CmakeLists.txt` of your project (not this project),
+add these codes below:
+```cmake
+
+```
+
 First, compile the project:
 ```bash
 mkdir build

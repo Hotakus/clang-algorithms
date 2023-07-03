@@ -8,7 +8,7 @@
   */
 
 #include <stdio.h>
-#include "queue.h"
+#include "include/queue.h"
 
 queue_t *queue_create(char *desc) {
     queue_t *queue = (queue_t *) calloc(1, sizeof(queue_t));
