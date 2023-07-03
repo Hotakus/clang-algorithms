@@ -14,7 +14,8 @@
 #include "chain.h"
 #include "../../typedefs.h"
 
-#define HASH_TABLE_COLLISION_MAX_RADIO (float)(0.375)
+#define HASH_TEST 1
+#define HASH_TABLE_COLLISION_MAX_RADIO (0.375f)
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,7 +63,10 @@ typedef struct hash_table_t {
 // 对外暴露的方法
 hash_table_t *hash_table_create(char *desc, size_t pre_size);
 void hash_table_destroy(hash_table_t *ht);
+
+#if HASH_TEST == 1
 void hash_test ();
+#endif
 
 #ifdef __cplusplus
 }

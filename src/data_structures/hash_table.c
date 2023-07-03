@@ -8,10 +8,11 @@
   */
 
 #include <stdio.h>
-#include <sys/time.h>
 #include "hash_table.h"
-#include "./include/chain.h"
 
+#if HASH_TEST == 1
+#include <sys/time.h>
+#endif
 
 static void hash_table_limit(hash_table_t *ht, size_t limit_size);
 static int hash_table_put(hash_table_t *ht, const char *key, void *value);
@@ -121,13 +122,17 @@ int hash_table_put(hash_table_t *ht, const char *key, void *value) {
         return -1;
     }
 
-    // 若冲突值占有效空间值的比例大于允许比例，则进行再散列
-//    float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
-//    if (ratio > HASH_TABLE_COLLISION_MAX_RADIO) {
-//        printf("1 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, ratio);
-//        hash_table_rehash(ht, ht->valid_size * 2);
-//        printf("2 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, (float)ht->collision_cnt / (float)ht->valid_size);
-//    }
+    // 若冲突总数值占有效空间数值的比例大于允许比例，则进行再散列
+    float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
+    if (ratio > HASH_TABLE_COLLISION_MAX_RADIO) {
+#if HASH_TEST == 1
+        printf("1 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, ratio);
+#endif
+        hash_table_rehash(ht, ht->valid_size * 2);
+#if HASH_TEST == 1
+        printf("2 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, (float)ht->collision_cnt / (float)ht->valid_size);
+#endif
+    }
 
     // calculate the hash code.
     int _hash_code = hash_code_fnv1a(key);
@@ -259,6 +264,9 @@ void hash_table_rehash(hash_table_t *ht, size_t new_size) {
 
     // 再散列
     if (temp_entry->length == ht->cur_size) {
+#if HASH_TEST == 1
+        printf("!!!Rehash!!! -- May be time-consuming...\n");
+#endif
         hash_table_clear(ht);
         ht->valid_size = new_size;
         ht->pri->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
@@ -268,15 +276,15 @@ void hash_table_rehash(hash_table_t *ht, size_t new_size) {
             probe = probe->next_node;
         }
     } else {
-#if DEBUG == 1
-        printf("%s verify error. (ht:%zu -- t:%zu)", __FUNCTION__, ht->cur_size, temp_entry->length);
+#if HASH_TEST == 1
+        printf("%s verify error. (ht:%zu -- t:%zu)\n", __FUNCTION__, ht->cur_size, temp_entry->length);
 #endif
     }
 
     chain_destroy(temp_entry);
 }
 
-
+#if HASH_TEST == 1
 void hash_test() {
 
 //    int tc = 100000;
@@ -334,11 +342,12 @@ void hash_test() {
     long long int dif_sec = 0;
     long long int dif_usec = 0;
     ssize_t res = 0;
-    int test_nums = 10000000;
+    int test_nums = 10000000 / 2;
     ssize_t total = 0;
 
     printf("Testing: %d\n", test_nums);
     printf("Initializing...\n");
+    srand(time(NULL));
 
     // Malloc test
     char **keys = calloc(test_nums, sizeof(char *));
@@ -383,6 +392,22 @@ void hash_test() {
     total += res;
     printf("Max       collision chain length: %d\n", max);
 
+    // single get test
+    int rand_index = rand();
+    ht->put(ht, keys[rand_index], &b);
+    gettimeofday(&begin, NULL);
+    ht_key_value_t *kv = ht->get(ht, keys[rand_index]);
+    gettimeofday(&end, NULL);
+    dif_sec = end.tv_sec - begin.tv_sec;
+    dif_usec = end.tv_usec - begin.tv_usec;
+    res = dif_sec * 1000000 + dif_usec;
+    total += res;
+    printf("SingleGet elapsed time: %lld secs, %lld ms, %lld us (%s : %d - %s)\n",
+           (res / 1000000), (res / 1000), res,
+           kv->name, *(int*)kv->data,
+           IS_TRUE(*(int*)kv->data == b));
+
+
     // get test
     gettimeofday(&begin, NULL);
     for (int i = 0; i < test_nums; ++i) {
@@ -398,9 +423,9 @@ void hash_test() {
     // rehash test
     gettimeofday(&begin, NULL);
     printf("\nRehash start--------\n");
-    printf("Before collision count: %zd %zd\n", ht->collision_cnt, ht->valid_size);
+    printf("Before collision count: %zd, valid size: %zd\n", ht->collision_cnt, ht->valid_size);
     hash_table_rehash(ht, test_nums * 2);
-    printf("After  collision count: %zd %zd\n", ht->collision_cnt, ht->valid_size);
+    printf("After  collision count: %zd, valid size: %zd\n", ht->collision_cnt, ht->valid_size);
     printf("Rehash  end --------\n\n");
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;
@@ -435,4 +460,4 @@ void hash_test() {
 
     printf("Total     elapsed time: %lld secs, %lld ms, %lld us\n", (total / 1000000), (total / 1000), total);
 }
-
+#endif
