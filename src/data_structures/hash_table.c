@@ -114,21 +114,13 @@ void hash_table_limit(hash_table_t *ht, size_t limit_size) {
  * @return 哈希map索引
  */
 int hash_table_put(hash_table_t *ht, const char *key, void *value) {
-    if (!ht) {
-        return -1;
-    }
-
-    if (!key) {
-        return -1;
-    }
-
     // 若冲突总数值占有效空间数值的比例大于允许比例，则进行再散列
     float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
     if (ratio > HASH_TABLE_COLLISION_MAX_RADIO) {
 #if HASH_TEST == 1
         printf("1 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, ratio);
 #endif
-        hash_table_rehash(ht, ht->valid_size * 2);
+        hash_table_rehash(ht, (int)((float)ht->valid_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
 #if HASH_TEST == 1
         printf("2 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, (float)ht->collision_cnt / (float)ht->valid_size);
 #endif
@@ -143,24 +135,26 @@ int hash_table_put(hash_table_t *ht, const char *key, void *value) {
         ht->pri->map[index].pair.name = key;
         ht->pri->map[index].pair.data = value;
         ht->cur_size += 1;
-    } else if (BA_STRCMP(ht->pri->map[index].pair.name, key) != 0) {
-        // collision
-        if (ht->pri->map[index].entry == NULL)
-            ht->pri->map[index].entry = chain_create(NULL);
-        hash_table_collision_entry_t *entry = ht->pri->map[index].entry;
+    } else {
+        int res = BA_STRCMP(ht->pri->map[index].pair.name, key);
+        if (res == 0) ht->pri->map[index].pair.data = value;
+        else {
+            // collision
+            if (ht->pri->map[index].entry == NULL)
+                ht->pri->map[index].entry = chain_create(NULL);
+            hash_table_collision_entry_t *entry = ht->pri->map[index].entry;
 
-        // find the collision chain
-        ht_key_value_t *_find_kv = entry->find_node(entry, key, true);
-        if (_find_kv) {
-            _find_kv->data = value;
-            return index;
+            // find the collision chain
+            ht_key_value_t *_find_kv = entry->find_node(entry, key, true);
+            if (_find_kv) _find_kv->data = value;
+            else {
+                ht_key_value_t *pair = entry->node_new(key, value);
+                entry->append(entry, pair);
+                ht->collision_cnt += 1;
+                ht->cur_size += 1;
+            }
         }
-        ht_key_value_t *pair = entry->node_new(key, value);
-        entry->append(entry, pair);
-        ht->collision_cnt += 1;
-        ht->cur_size += 1;
-    } else if (BA_STRCMP(ht->pri->map[index].pair.name, key) == 0)
-        ht->pri->map[index].pair.data = value;
+    }
 
     return index;
 }
@@ -342,10 +336,10 @@ void hash_test() {
     long long int dif_sec = 0;
     long long int dif_usec = 0;
     ssize_t res = 0;
-    int test_nums = 10000000 / 2;
+    int test_nums = 10000000;
     ssize_t total = 0;
 
-    printf("Testing: %d\n", test_nums);
+    printf("Number of tests: %d\n", test_nums);
     printf("Initializing...\n");
     srand(time(NULL));
 
@@ -358,7 +352,7 @@ void hash_test() {
 
     // create test
     gettimeofday(&begin, NULL);
-    hash_table_t *ht = hash_table_create("hash_table1", test_nums);
+    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;
     dif_usec = end.tv_usec - begin.tv_usec;
@@ -421,18 +415,18 @@ void hash_test() {
     printf("Get       elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
 
     // rehash test
-    gettimeofday(&begin, NULL);
-    printf("\nRehash start--------\n");
+//    gettimeofday(&begin, NULL);
+//    printf("\nRehash start--------\n");
     printf("Before collision count: %zd, valid size: %zd\n", ht->collision_cnt, ht->valid_size);
-    hash_table_rehash(ht, test_nums * 2);
-    printf("After  collision count: %zd, valid size: %zd\n", ht->collision_cnt, ht->valid_size);
-    printf("Rehash  end --------\n\n");
-    gettimeofday(&end, NULL);
-    dif_sec = end.tv_sec - begin.tv_sec;
-    dif_usec = end.tv_usec - begin.tv_usec;
-    res = dif_sec * 1000000 + dif_usec;
-    total += res;
-    printf("Rehash    elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
+//    hash_table_rehash(ht, test_nums * 2);
+//    printf("After  collision count: %zd, valid size: %zd\n", ht->collision_cnt, ht->valid_size);
+//    printf("Rehash  end --------\n\n");
+//    gettimeofday(&end, NULL);
+//    dif_sec = end.tv_sec - begin.tv_sec;
+//    dif_usec = end.tv_usec - begin.tv_usec;
+//    res = dif_sec * 1000000 + dif_usec;
+//    total += res;
+//    printf("Rehash    elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
 
 
     // destroy test
