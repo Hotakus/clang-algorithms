@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_C_STANDARD 11)
-project(codewar_kata_c
-            LANGUAGES C
-            VERSION 1.0.0.0
-            DESCRIPTION "Practices"
-            HOMEPAGE_URL https://www.codewars.com/users/Hotakus
+project(hotakus-clang-algorithms
+        LANGUAGES C
+        VERSION 1.1.0.0
+        DESCRIPTION "Hotakus' clang algorithms (hca)"
+        HOMEPAGE_URL https://www.codewars.com/users/Hotakus
         )
 
 # 指定版本号的配置文件
@@ -62,12 +62,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin) # 可执行文件
 
 # 添加子目录
 set(SRCS_DIR ${PROJECT_SOURCE_DIR}/src/)
-
 set(KATAS_SRC ${SRCS_DIR}/katas)
 set(DS_SRC ${SRCS_DIR}/data_structures)
 set(ALGORITHM_SRC ${SRCS_DIR}/algorithms)
 set(QUESTION_SRC ${SRCS_DIR}/questions)
-MESSAGE(STATUS "${DS_SRC}")
 
 aux_source_directory(. ROOT_SRCS)
 add_subdirectory(${KATAS_SRC})
@@ -83,7 +81,7 @@ add_subdirectory(${QUESTION_SRC})
 #set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "_debug")
 #set_target_properties(${TARGET_NAME} PROPERTIES RELEASE_POSTFIX "_r")
 # add_executable(hca ${ROOT_SRCS})
-add_library(hca ${ROOT_SRCS})
+add_library(hca STATIC ${ROOT_SRCS})
 
 # 链接库
 target_link_libraries(hca hba)

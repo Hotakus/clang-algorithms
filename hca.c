@@ -4,9 +4,9 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <sys/time.h>
-#include "main.h"
+#include "hca.h"
 
-void fun_test() {
+void hca_test() {
     char *str1 = NULL;
     char *str2 = NULL;
 
@@ -70,14 +70,3 @@ void fun_test() {
     free(res1);
     printf("------------------ String Mix ( End ) ------------------\n\n");
 }
-
-
-//int main() {
-//    //hash_test();
-//
-//    char *res = str_rev("hellob", true);
-//
-//    printf("result: %s\n", res);
-//
-//    return 0;
-//}

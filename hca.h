@@ -1,5 +1,5 @@
-#ifndef CODEWAR_KATA_C_MAIN_H
-#define CODEWAR_KATA_C_MAIN_H
+#ifndef CODEWAR_KATA_C_HCA_H
+#define CODEWAR_KATA_C_HCA_H
 
 #include "./src/algorithms/ba.h"
 #include "./src/data_structures/ds.h"
@@ -12,9 +12,10 @@
 extern "C" {
 #endif
 
+void hca_test();
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
-#endif //CODEWAR_KATA_C_MAIN_H
+#endif //CODEWAR_KATA_C_HCA_H
