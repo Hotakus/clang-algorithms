@@ -6,6 +6,3 @@ include_directories(. LIB_INC)
 
 # 生成链接库
 add_library (hba ${LIB_SRCS} ${LIB_INC})
-target_link_libraries(hba datastructures)
-
-
