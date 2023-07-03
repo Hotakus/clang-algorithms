@@ -27,8 +27,7 @@ void queue_push(queue_t *queue, const char *name, void *data) {
     if (!queue) return;
 
     chain_t *chain = queue->_chain;
-    chain_node_t *cn = chain->node_new(chain, name);
-    cn->data = data;
+    chain_node_t *cn = chain->node_new(name, data);
     chain->insert(chain, cn, "head", false);
 
     queue->waiting += 1;

@@ -28,7 +28,7 @@
 static chain_node_t *node_step(chain_node_t *node, unsigned char steps, bool forward);
 
 static void chain_poll(chain_t *chain, bool forward);
-static chain_node_t *node_create(chain_t *chain, const char *name);
+static chain_node_t *node_create(const char *name, void *data);
 static void node_destroy(chain_node_t *node);
 static void node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool front);
 
@@ -51,7 +51,7 @@ static int chain_loop_length(chain_node_t *collision_node);
  * @param name 节点名字
  * @return 一个新节点
  */
-chain_node_t *node_create(chain_t *chain, const char *name) {
+chain_node_t *node_create(const char *name, void *data) {
     chain_node_t *node = (chain_node_t *) calloc(1, sizeof(chain_node_t));
 
     if (node == NULL) {
@@ -62,10 +62,10 @@ chain_node_t *node_create(chain_t *chain, const char *name) {
     }
 
     node->name = name;
+    node->data = data;
 
     node->prev_node = NULL;
     node->next_node = NULL;
-    node->data = NULL;
 
 #if USE_CHAIN_SEM == 1
     int sem_res = sem_wait(chain->nc_sem);
@@ -79,7 +79,7 @@ chain_node_t *node_create(chain_t *chain, const char *name) {
     }
 #endif
 
-    node->id = chain->length + 1;
+    // Some things
 
 #if USE_CHAIN_SEM == 1
     sem_post(chain->nc_sem);
@@ -121,8 +121,8 @@ chain_t *chain_create(char *desc) {
     chain->is_loop = false;
 
     // create head and tail nodes.
-    chain->head = node_create(chain, "head");
-    chain->tail = node_create(chain, "tail");
+    chain->head = node_create("head", NULL);
+    chain->tail = node_create("tail", NULL);
     chain->length = 0;  // head and tail
 
     chain->head->prev_node = NULL;
@@ -230,6 +230,7 @@ void chain_append(chain_t *chain, chain_node_t *node) {
     }
 
     chain->length += 1;
+    node->id = chain->length;
 }
 
 
@@ -548,9 +549,9 @@ void chain_test() {
 //    chain->insert(chain, chain->node_new(chain, "test"), "tail", true);
 //    chain->insert(chain, chain->node_new(chain, "test"), "tail", true);
 //    chain->insert(chain, chain->node_new(chain, "test2"), "tail", false);
-    chain->insert(chain, chain->node_new(chain, "test2"), "head", false);
-    chain->append(chain, chain->node_new(chain, "testa"));
-    chain->append(chain, chain->node_new(chain, "tests"));
+    chain->insert(chain, chain->node_new("test2", NULL), "head", false);
+    chain->append(chain, chain->node_new("testa", NULL));
+    chain->append(chain, chain->node_new("tests", NULL));
 
     //chain->rm_node(chain, "testa", NULL);
     chain_poll(chain, true);

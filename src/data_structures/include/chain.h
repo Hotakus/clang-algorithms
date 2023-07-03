@@ -22,7 +22,7 @@ typedef struct chain_node_t chain_node_t;
 
 /* functions typedef */
 typedef void (chain_poll_func_t)(chain_t *chain, bool forward);
-typedef chain_node_t *(node_create_func_t)(chain_t *chain, const char *name);
+typedef chain_node_t *(node_create_func_t)(const char *name, void *data);
 typedef void (chain_node_destroy_func_t)(chain_node_t *node);
 typedef void (chain_node_connect_func_t)(chain_node_t *dst_node, chain_node_t *src_node, bool front);
 typedef void (chain_node_swap_t)(chain_node_t *dst_node, chain_node_t *src_node);
