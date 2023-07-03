@@ -28,7 +28,7 @@ add_subdirectory(./clang-algorithms/)
 add_executable(your_project_name main.c)
 target_link_libraries(your_project_name hca)
 ```
-And then, in your `main.c`:
+And then, test this project, in your `main.c`:
 ```c
 #include <stdio.h>
 int main() {
