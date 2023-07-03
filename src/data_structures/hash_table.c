@@ -8,7 +8,7 @@
   */
 
 #include <stdio.h>
-#include "hash_table.h"
+#include "./include/hash_table.h"
 
 #if HASH_TEST == 1
 #include <sys/time.h>
