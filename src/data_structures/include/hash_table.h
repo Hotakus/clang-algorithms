@@ -83,7 +83,7 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size);
 void hash_table_destroy(hash_table_t *ht);
 
 #if HASH_TEST == 1
-void hash_test ();
+void hash_test (int tn);
 #endif
 
 #ifdef __cplusplus

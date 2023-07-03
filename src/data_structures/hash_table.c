@@ -304,56 +304,7 @@ bool hash_table_get_ar(hash_table_t *ht) {
 
 
 #if HASH_TEST == 1
-void hash_test() {
-
-//    int tc = 100000;
-//    hash_table_t *ht2 = hash_table_create(NULL, tc / 2);
-//    srand(time(NULL));
-//    char **keys2 = calloc(tc, sizeof(char *));
-//    for (int i = 0; i < tc; ++i) {
-//        keys2[i] = calloc(10, sizeof(char));
-//        sprintf(keys2[i], "%s", rand_string(10));
-//    }
-//
-//    int c = 11312;
-//
-//    for (int i = 0; i < tc; ++i) {
-//        ht2->put(ht2, keys2[i], &c);
-//    }
-//
-//    float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
-//    printf("1 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, ratio);
-//    hash_table_rehash(ht, tc );
-//    ratio = (float)ht->collision_cnt / (float)ht->valid_size;
-//    printf("2 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, ratio);
-//
-//    printf("\n---------------------1\n");
-//    for (int i = 0; i < ht->valid_size; ++i) {
-//        if (ht->pri->map[i].pair.name) {
-//            printf("%d kv - %s : %d ", i, ht->pri->map[i].pair.name, *(int*)ht->pri->map[i].pair.data);
-//            if (ht->pri->map[i].entry) {
-//                printf("%zu", ht->pri->map[i].entry->length);
-//            }
-//            printf("\n");
-//        }
-//    }
-//
-//    printf("collision count: %zd\n", ht2->collision_cnt);
-//    hash_table_rehash(ht2, tc * 1);
-//    printf("collision count: %zd\n", ht2->collision_cnt);
-//
-//    hash_table_destroy(ht2);
-//
-//    printf("\n---------------------2\n");
-//    for (int i = 0; i < ht->valid_size; ++i) {
-//        if (ht->pri->map[i].pair.name) {
-//            printf("%d kv - %s : %d ",  i, ht->pri->map[i].pair.name, *(int*)ht->pri->map[i].pair.data);
-//            if (ht->pri->map[i].entry) {
-//                printf("%zu", ht->pri->map[i].entry->length);
-//            }
-//            printf("\n");
-//        }
-//    }
+void hash_test(int tn) {
 
     int a = 996;
     int b = 114514;
@@ -361,7 +312,7 @@ void hash_test() {
     long long int dif_sec = 0;
     long long int dif_usec = 0;
     ssize_t res = 0;
-    int test_nums = 10000000;
+    int test_nums = tn;
     ssize_t total = 0;
 
     printf("Number of tests: %d\n", test_nums);
@@ -413,7 +364,7 @@ void hash_test() {
     printf("Max       collision chain length: %d\n", max);
 
     // single get test
-    int rand_index = rand();
+    int rand_index = rand() % test_nums;
     ht->put(ht, keys[rand_index], &b);
     gettimeofday(&begin, NULL);
     ht_key_value_t *kv = ht->get(ht, keys[rand_index]);
