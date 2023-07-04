@@ -14,7 +14,6 @@
 #include <sys/time.h>
 #endif
 
-static void hash_table_limit(hash_table_t *ht, size_t limit_size);
 static int hash_table_put(hash_table_t *ht, const char *key, void *value);
 static ht_key_value_t *hash_table_get(hash_table_t *ht, char *key);
 static void hash_table_remove(hash_table_t *ht, char *key);
@@ -23,11 +22,14 @@ static void hash_table_clear(hash_table_t *ht);
 
 static void hash_table_set_ar(hash_table_t *ht, bool ar);
 static bool hash_table_get_ar(hash_table_t *ht);
+static void hash_table_set_rehash_method(hash_table_t *ht, ht_rehash_method_t method);
+
 
 // 私有变量结构体
 struct private {
     hash_table_entry_t *map;    // 当前哈希表映射
     bool auto_rehash;           // 是否自动再散列，默认为 false
+    ht_rehash_method_t rehash_method; // 哈希表重新散列触发方法
 };
 
 
@@ -55,9 +57,9 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
     ht->pri = calloc(1, sizeof(private));
     ht->pri->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
     ht->pri->auto_rehash = false;
+    ht->pri->rehash_method = HASH_TABLE_REHASH_COLLISION;
 
     // default method for hash table
-    ht->limit = hash_table_limit;
     ht->put = hash_table_put;
     ht->get = hash_table_get;
     ht->remove = hash_table_remove;
@@ -66,6 +68,9 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
 
     ht->set_ar = hash_table_set_ar;
     ht->get_ar = hash_table_get_ar;
+
+    // ht->set_key_type = hash_table_set_key_type;
+    ht->set_rehash_method = hash_table_set_rehash_method;
 
     return ht;
 }
@@ -106,18 +111,6 @@ void hash_table_destroy(hash_table_t *ht) {
 
 
 /**
- *
- * @param ht
- * @param limit_size
- */
-void hash_table_limit(hash_table_t *ht, size_t limit_size) {
-    if (ht->valid_size < limit_size) {
-        hash_table_rehash(ht, limit_size);
-    }
-}
-
-
-/**
  * 哈希表Put
  * @param ht 要操作的哈希表
  * @param key 键
@@ -126,17 +119,26 @@ void hash_table_limit(hash_table_t *ht, size_t limit_size) {
  */
 int hash_table_put(hash_table_t *ht, const char *key, void *value) {
 
-    // 若冲突总数值占有效空间数值的比例大于允许比例，则进行再散列
+    // 是否自动再散列
     if (ht->pri->auto_rehash) {
-        float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
-        if (ratio > HASH_TABLE_COLLISION_MAX_RADIO) {
-#if HASH_TEST == 1
-            printf("1 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, ratio);
-#endif
-            hash_table_rehash(ht, (int)((float)ht->valid_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
-#if HASH_TEST == 1
-            printf("2 rehash %zd (%zd) %f\n", ht->valid_size, ht->collision_cnt, (float)ht->collision_cnt / (float)ht->valid_size);
-#endif
+        switch (ht->pri->rehash_method) {
+            case HASH_TABLE_REHASH_COLLISION: {
+                // 若冲突总数值占有效空间数值的比例大于允许比例，则进行再散列
+                float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
+                if (ratio > HASH_TABLE_COLLISION_MAX_RADIO)
+                    hash_table_rehash(ht, (int)((float)ht->valid_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+                break;
+            }
+            case HASH_TABLE_REHASH_LOAD_FACTOR: {
+                // 若负载因子大于等于允许值，则进行再散列
+                float load_factor = ((float)ht->cur_size / (float)ht->valid_size);
+                if (load_factor >= HASH_TABLE_REHASH_FACTOR)
+                    hash_table_rehash(ht, (int)((float)ht->valid_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+                break;
+            }
+            default:
+                ht->pri->rehash_method = HASH_TABLE_REHASH_COLLISION;
+                break;
         }
     }
 
@@ -302,6 +304,9 @@ bool hash_table_get_ar(hash_table_t *ht) {
     return ht->pri->auto_rehash;
 }
 
+void hash_table_set_rehash_method(hash_table_t *ht, ht_rehash_method_t method) {
+    ht->pri->rehash_method = method;
+}
 
 #if HASH_TEST == 1
 void hash_test(int tn) {
@@ -351,17 +356,20 @@ void hash_test(int tn) {
 
     // collision chain max length
     int max = 0;
+    int c = 0;
     gettimeofday(&begin, NULL);
     for (int i = 0; i < test_nums; ++i) {
-        if (ht->pri->map[i].entry)
+        if (ht->pri->map[i].entry) {
             max = MAX(ht->pri->map[i].entry->length, max);
+            ++c;
+        }
     }
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;
     dif_usec = end.tv_usec - begin.tv_usec;
     res = dif_sec * 1000000 + dif_usec;
     total += res;
-    printf("Max       collision chain length: %d\n", max);
+    printf("Max       collision chain length: %d \n", max);
 
     // single get test
     int rand_index = rand() % test_nums;
@@ -391,10 +399,14 @@ void hash_test(int tn) {
     total += res;
     printf("Get       elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
 
+    printf("Collision count: %zd, valid size: %zd (space utilization: %.2f%%)\n",
+           ht->collision_cnt, ht->valid_size,
+           (((float)ht->cur_size - (float)ht->collision_cnt)/(float)ht->cur_size) * 100);
+
     // rehash test
 //    gettimeofday(&begin, NULL);
 //    printf("\nRehash start--------\n");
-    printf("Before collision count: %zd, valid size: %zd\n", ht->collision_cnt, ht->valid_size);
+//    printf("Before collision count: %zd, valid size: %zd\n", ht->collision_cnt, ht->valid_size);
 //    hash_table_rehash(ht, test_nums * 2);
 //    printf("After  collision count: %zd, valid size: %zd\n", ht->collision_cnt, ht->valid_size);
 //    printf("Rehash  end --------\n\n");
@@ -430,5 +442,41 @@ void hash_test(int tn) {
     printf("Free      elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
 
     printf("Total     elapsed time: %lld secs, %lld ms, %lld us\n", (total / 1000000), (total / 1000), total);
+}
+
+void hash_example() {
+    // 创建一个哈希表对象，对象名为“hash_table_01”，预分配size为1000。
+    int ps = 1000;
+    hash_table_t *ht = hash_table_create("hash_table_01", ps);
+    ht->set_ar(ht, true); // 设置是否自动再散列
+    ht->set_rehash_method(ht, HASH_TABLE_REHASH_COLLISION);  // 再散列触发方式，默认方式为 冲突比触发
+
+    // 放置键值对
+    char *key = "hello_01";
+    int val = 114514;
+    ht->put(ht, key, &val);
+    printf("Put -- key: %s, value: %d\n", key, val);
+
+    // 获取键值对
+    ht_key_value_t *pair = NULL;
+    pair = ht->get(ht, "hello_01");
+    if (pair)
+        printf("Get -- key: %s, value: %d\n", pair->name, *(int*)pair->data);
+    else {
+        printf("Get -- key: %s, failed.\n", key);
+        return;
+    }
+
+    // 删除键值对
+    ht->remove(ht, key);
+    printf("Remove -- key: %s\n", key);
+
+    // 主动再散列，再散列数值为原size的最佳性能倍数
+    ht->rehash(ht, (int)((float)ps * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+    printf("Rehash\n");
+
+    // 销毁哈希表
+    hash_table_destroy(ht);
+    printf("Destroy\n");
 }
 #endif

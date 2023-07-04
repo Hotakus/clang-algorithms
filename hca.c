@@ -75,7 +75,7 @@ void hca_test() {
 
 int main() {
     // hca_test();
-    hash_test(2000000);
+    hash_example();
     return 0;
 }
 #endif
