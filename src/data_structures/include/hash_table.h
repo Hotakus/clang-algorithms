@@ -68,19 +68,17 @@ typedef struct hash_table_t {
 
     /* 公共 methods */
     struct {
-        hash_table_limit_t *limit;
         hash_table_put_t *put;
         hash_table_get_t *get;
         hash_table_remove_t *remove;
         hash_table_rehash_t *rehash;
-        hash_table_clear_t *clear;
 
         /* Set method */
-        hash_table_set_ar_t *set_ar;    // set auto rehash
+        hash_table_set_ar_t *set_auto_rehash;    // set auto rehash
         hash_table_set_rehash_method_t *set_rehash_method; // set rehash method
 
         /* Get method */
-        hash_table_get_ar_t *get_ar;    // get auto rehash
+        hash_table_get_ar_t *get_auto_rehash;    // get auto rehash
     };
 
     // 私有变量结构体, 程序调用，别修改

@@ -30,6 +30,9 @@ struct private {
     hash_table_entry_t *map;    // 当前哈希表映射
     bool auto_rehash;           // 是否自动再散列，默认为 false
     ht_rehash_method_t rehash_method; // 哈希表重新散列触发方法
+
+    // 私有方法
+    hash_table_clear_t *clear;
 };
 
 
@@ -64,10 +67,10 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
     ht->get = hash_table_get;
     ht->remove = hash_table_remove;
     ht->rehash = hash_table_rehash;
-    ht->clear = hash_table_clear;
+    ht->pri->clear = hash_table_clear;
 
-    ht->set_ar = hash_table_set_ar;
-    ht->get_ar = hash_table_get_ar;
+    ht->set_auto_rehash = hash_table_set_ar;
+    ht->get_auto_rehash = hash_table_get_ar;
 
     // ht->set_key_type = hash_table_set_key_type;
     ht->set_rehash_method = hash_table_set_rehash_method;
@@ -91,6 +94,7 @@ void hash_table_clear(hash_table_t *ht) {
             ht->pri->map[i].pair.data = NULL;
         }
         free(ht->pri->map);
+        ht->pri->map = NULL;
     }
 
     ht->valid_size = 0;
@@ -104,8 +108,10 @@ void hash_table_clear(hash_table_t *ht) {
  * @param ht 要销毁的哈希表
  */
 void hash_table_destroy(hash_table_t *ht) {
-    hash_table_clear(ht);
-    if (ht->pri) free(ht->pri);
+    if (ht->pri) {
+        ht->pri->clear(ht);
+        free(ht->pri);
+    }
     free(ht);
 }
 
@@ -126,14 +132,14 @@ int hash_table_put(hash_table_t *ht, const char *key, void *value) {
                 // 若冲突总数值占有效空间数值的比例大于允许比例，则进行再散列
                 float ratio = (float)ht->collision_cnt / (float)ht->valid_size;
                 if (ratio > HASH_TABLE_COLLISION_MAX_RADIO)
-                    hash_table_rehash(ht, (int)((float)ht->valid_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+                    hash_table_rehash(ht, (int)((float)ht->cur_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
                 break;
             }
             case HASH_TABLE_REHASH_LOAD_FACTOR: {
                 // 若负载因子大于等于允许值，则进行再散列
                 float load_factor = ((float)ht->cur_size / (float)ht->valid_size);
                 if (load_factor >= HASH_TABLE_REHASH_FACTOR)
-                    hash_table_rehash(ht, (int)((float)ht->valid_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+                    hash_table_rehash(ht, (int)((float)ht->cur_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
                 break;
             }
             default:
@@ -209,13 +215,7 @@ ht_key_value_t *hash_table_get(hash_table_t *ht, char *key) {
  */
 void hash_table_remove(hash_table_t *ht, char *key) {
 
-    if (!ht) {
-        return;
-    }
-
-    if (!key) {
-        return;
-    }
+    if (!ht || !key) return;
 
     int _hash_code = hash_code_fnv1a(key);
     int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
@@ -333,8 +333,9 @@ void hash_test(int tn) {
 
     // create test
     gettimeofday(&begin, NULL);
-    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
-    ht->set_ar(ht, true);
+    //hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * 7));
+    ht->set_auto_rehash(ht, true);
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;
     dif_usec = end.tv_usec - begin.tv_usec;
@@ -448,8 +449,9 @@ void hash_example() {
     // 创建一个哈希表对象，对象名为“hash_table_01”，预分配size为1000。
     int ps = 1000;
     hash_table_t *ht = hash_table_create("hash_table_01", ps);
-    ht->set_ar(ht, true); // 设置是否自动再散列
+    ht->set_auto_rehash(ht, true); // 设置是否自动再散列
     ht->set_rehash_method(ht, HASH_TABLE_REHASH_COLLISION);  // 再散列触发方式，默认方式为 冲突比触发
+    printf("%s created successfully.\n", ht->desc);
 
     // 放置键值对
     char *key = "hello_01";
