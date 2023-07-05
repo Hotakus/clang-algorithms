@@ -165,7 +165,8 @@ void str_split_free(char **buf) {
 
 
 char *str_chr(char ch, char *str) {
-    for (int i = 0; i < BA_STRLEN(str); ++i)
+    int len = BA_STRLEN(str);
+    for (int i = 0; i < len; ++i)
         if (ch == str[i])
             return str;
     return NULL;

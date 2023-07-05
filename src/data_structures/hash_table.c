@@ -330,8 +330,8 @@ void hash_test(int tn) {
 
     // create test
     gettimeofday(&begin, NULL);
-    //hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
-    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * 1));
+    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+    //hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * 1));
     ht->set_auto_rehash(ht, true);
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;

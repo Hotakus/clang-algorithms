@@ -19,7 +19,8 @@
  */
 int32_t hash_code_fnv1a(char *key) {
     int _hash_code = OFFSET_BASIS;
-    for (int i = 0; i < BA_STRLEN(key); ++i) {
+    int len = BA_STRLEN(key);
+    for (int i = 0; i < len; ++i) {
         _hash_code ^= key[i];
         _hash_code *= FNV_PRIME;
     }
