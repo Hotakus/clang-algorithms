@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "chain.h"
+#include "./include/chain.h"
 
 #if DEBUG == 1
 #include <stdio.h>
