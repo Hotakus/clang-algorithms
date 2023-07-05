@@ -108,10 +108,8 @@ void hash_table_clear(hash_table_t *ht) {
  * @param ht 要销毁的哈希表
  */
 void hash_table_destroy(hash_table_t *ht) {
-    if (ht->pri) {
-        ht->pri->clear(ht);
-        free(ht->pri);
-    }
+    hash_table_clear(ht);
+    free(ht->pri);
     free(ht);
 }
 
@@ -327,14 +325,13 @@ void hash_test(int tn) {
     // Malloc test
     char **keys = calloc(test_nums, sizeof(char *));
     for (int i = 0; i < test_nums; ++i) {
-        keys[i] = calloc(10, sizeof(char));
-        sprintf(keys[i], "%s", rand_string(10));
+        keys[i] = rand_string(10);
     }
 
     // create test
     gettimeofday(&begin, NULL);
     //hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
-    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * 7));
+    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * 1));
     ht->set_auto_rehash(ht, true);
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;
@@ -473,8 +470,8 @@ void hash_example() {
     ht->remove(ht, key);
     printf("Remove -- key: %s\n", key);
 
-    // 主动再散列，再散列数值为原size的最佳性能倍数
-    ht->rehash(ht, (int)((float)ps * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+    // 主动再散列，再散列数值为数据真实size的最佳性能倍数，此时的性能达到最高
+    ht->rehash(ht, (int)((float)ht->cur_size * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
     printf("Rehash\n");
 
     // 销毁哈希表
