@@ -186,7 +186,7 @@ void chain_destroy(chain_t *chain) {
  * @param chain
  */
 void chain_remove_all(chain_t *chain) {
-    if (chain->length == 2) {
+    if (chain->length == 0) {
         return;
     }
 
