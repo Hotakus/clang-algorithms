@@ -14,6 +14,7 @@
 #include "./include/string_mix.h"
 #include "./include/make_a_spiral.h"
 #include "./include/sum_intervals.h"
+#include "./include/morse_code.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -72,10 +72,9 @@ void hca_test() {
     free(res1);
     printf("------------------ String Mix ( End ) ------------------\n\n");
 }
+#endif
 
 int main() {
-    // hca_test();
-    hash_example();
+
     return 0;
 }
-#endif
