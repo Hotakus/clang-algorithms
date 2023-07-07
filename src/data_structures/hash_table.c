@@ -19,6 +19,7 @@ static ht_key_value_t *hash_table_get(hash_table_t *ht, char *key);
 static void hash_table_remove(hash_table_t *ht, char *key);
 static void hash_table_rehash(hash_table_t *ht, size_t new_size);
 static void hash_table_clear(hash_table_t *ht);
+static void ht_poll(hash_table_t *ht);
 
 static void hash_table_set_ar(hash_table_t *ht, bool ar);
 static bool hash_table_get_ar(hash_table_t *ht);
@@ -27,7 +28,7 @@ static void hash_table_set_rehash_method(hash_table_t *ht, ht_rehash_method_t me
 
 // 私有变量结构体
 struct private {
-    hash_table_entry_t *map;    // 当前哈希表映射
+    hash_table_map_elem_t *map;    // 当前哈希表映射
     bool auto_rehash;           // 是否自动再散列，默认为 false
     ht_rehash_method_t rehash_method; // 哈希表重新散列触发方法
 
@@ -58,7 +59,7 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
 
     ht->valid_size = pre_size;
     ht->pri = calloc(1, sizeof(private));
-    ht->pri->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
+    ht->pri->map = (hash_table_map_elem_t *) calloc(ht->valid_size, sizeof(hash_table_map_elem_t));
     ht->pri->auto_rehash = false;
     ht->pri->rehash_method = HASH_TABLE_REHASH_COLLISION;
 
@@ -68,6 +69,7 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
     ht->remove = hash_table_remove;
     ht->rehash = hash_table_rehash;
     ht->pri->clear = hash_table_clear;
+    ht->poll = ht_poll;
 
     ht->set_auto_rehash = hash_table_set_ar;
     ht->get_auto_rehash = hash_table_get_ar;
@@ -277,7 +279,7 @@ void hash_table_rehash(hash_table_t *ht, size_t new_size) {
 #endif
         hash_table_clear(ht);
         ht->valid_size = new_size;
-        ht->pri->map = (hash_table_entry_t *) calloc(ht->valid_size, sizeof(hash_table_entry_t));
+        ht->pri->map = (hash_table_map_elem_t *) calloc(ht->valid_size, sizeof(hash_table_map_elem_t));
         ht_key_value_t *probe = temp_entry->head->next_node;
         while (probe != temp_entry->tail) {
             ht->put(ht, probe->name, probe->data);
@@ -306,6 +308,11 @@ void hash_table_set_rehash_method(hash_table_t *ht, ht_rehash_method_t method) {
     ht->pri->rehash_method = method;
 }
 
+size_t put_times = 0;
+size_t put_times_tmp = 0;
+size_t get_times = 0;
+size_t get_times_tmp = 0;
+
 #if HASH_TEST == 1
 void hash_test(int tn) {
 
@@ -330,8 +337,8 @@ void hash_test(int tn) {
 
     // create test
     gettimeofday(&begin, NULL);
-    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
-    //hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * 1));
+    //hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * HASH_TABLE_HIGHEST_PERFORMANCE_MULTIPLE));
+    hash_table_t *ht = hash_table_create("hash_table1", (int)((float)test_nums * 1));
     ht->set_auto_rehash(ht, true);
     gettimeofday(&end, NULL);
     dif_sec = end.tv_sec - begin.tv_sec;
@@ -350,6 +357,8 @@ void hash_test(int tn) {
     dif_usec = end.tv_usec - begin.tv_usec;
     res = dif_sec * 1000000 + dif_usec;
     total += res;
+    put_times += (res / 1000);
+    put_times_tmp = (res / 1000);
     printf("Put       elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
 
     // collision chain max length
@@ -395,6 +404,8 @@ void hash_test(int tn) {
     dif_usec = end.tv_usec - begin.tv_usec;
     res = dif_sec * 1000000 + dif_usec;
     total += res;
+    get_times += (res / 1000);
+    get_times_tmp = (res / 1000);
     printf("Get       elapsed time: %lld secs, %lld ms, %lld us\n", (res / 1000000), (res / 1000), res);
 
     printf("Collision count: %zd, valid size: %zd (space utilization: %.2f%%)\n",
@@ -479,3 +490,27 @@ void hash_example() {
     printf("Destroy\n");
 }
 #endif
+
+void ht_poll(hash_table_t *ht) {
+    int cnt = 0;
+    for (int i = 0; i < ht->valid_size; ++i) {
+        hash_table_map_elem_t *map_elem = &ht->pri->map[i];
+        if (map_elem && map_elem->pair.name) {
+            printf("[%02d] (%s) ", i, map_elem->pair.name);
+            cnt += 1;
+            if (cnt == 20) break;
+        } else {
+            continue;
+        }
+
+        if (map_elem->entry) {
+            chain_node_t *probe = map_elem->entry->head->next_node;
+            while (probe != map_elem->entry->tail) {
+                printf("-> (%s) ", probe->name);
+                probe = probe->next_node;
+            }
+        }
+        printf("\n");
+
+    }
+}

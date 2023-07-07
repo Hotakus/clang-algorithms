@@ -32,7 +32,7 @@ typedef chain_node_t ht_key_value_t;
 
 /* Methods typedef -- Begin */
 typedef struct hash_table_t hash_table_t;
-typedef struct hash_table_entry_t hash_table_entry_t;
+typedef struct hash_table_map_elem_t hash_table_map_elem_t;
 typedef enum ht_rehash_method_t ht_rehash_method_t;
 
 typedef void (hash_table_limit_t)(hash_table_t *ht, size_t limit_size);
@@ -41,6 +41,7 @@ typedef ht_key_value_t *(hash_table_get_t)(hash_table_t *ht, char *key);
 typedef void (hash_table_remove_t)(hash_table_t *ht, char *key);
 typedef void (hash_table_rehash_t)(hash_table_t *ht, size_t new_size);
 typedef void (hash_table_clear_t)(hash_table_t *ht);
+typedef void (hash_table_poll_t)(hash_table_t *ht);
 /* Set and Get -- Begin */
 typedef void (hash_table_set_ar_t)(hash_table_t *ht, bool ar);
 typedef bool (hash_table_get_ar_t)(hash_table_t *ht);
@@ -54,10 +55,10 @@ typedef enum ht_rehash_method_t {
     HASH_TABLE_REHASH_LOAD_FACTOR,
 } ht_rehash_method_t;
 
-typedef struct hash_table_entry_t {
+typedef struct hash_table_map_elem_t {
     ht_key_value_t pair;                    // 键值对
     hash_table_collision_entry_t *entry;    // 冲突链表入口
-} hash_table_entry_t;
+} hash_table_map_elem_t;
 
 typedef struct hash_table_t {
     /* 公共变量 */
@@ -72,6 +73,7 @@ typedef struct hash_table_t {
         hash_table_get_t *get;
         hash_table_remove_t *remove;
         hash_table_rehash_t *rehash;
+        hash_table_poll_t *poll;
 
         /* Set method */
         hash_table_set_ar_t *set_auto_rehash;    // set auto rehash
