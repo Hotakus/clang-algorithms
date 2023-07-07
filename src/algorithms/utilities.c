@@ -94,7 +94,7 @@ void str_cpy(char *dest, const char *src) {
         return;
     }
 
-    while (*src != '\0')
+    while (*src != '\0' && src != NULL)
         *dest++ = *src++;
 
     *dest = '\0';
@@ -135,31 +135,66 @@ char *str_conn(char *s1, char *s2) {
 char **str_split(const char *src, char sep, int *wn) {
     if (src == NULL) return NULL;
 
-    char *src2 = (char *) calloc(BA_STRLEN(src) + 1, sizeof(char));
-    BA_STRCPY(src2, src);
+    int word_cnt = 0;
+    int len = BA_STRLEN(src);
+    char *copy = calloc( len + 1, sizeof(char));
+    char *p_cy = copy;
+    BA_STRCPY(copy, src);
 
-    int cnt = 0;
-    while (*src) if (*src++ == sep) cnt++;
-    cnt += 1;
+    while (*src) if (*src++ == sep) ++word_cnt;
+    (copy[len - 1] == ' ') ? word_cnt : ++word_cnt;
 
-    if (wn) *wn = cnt;
-
-    char **tmp = (char **) calloc(cnt, sizeof(char *));
-    char **pt = tmp;
-
-    *pt = src2;
-    do {
-        if (*src2 == sep) {
-            *++pt = (src2 + 1); // 将单词存入tmp
-            *src2++ = '\0';
+    char **res = calloc(word_cnt, sizeof(char *));
+    char **p_res = res;
+    int sep_cnt = 0;
+    for (int i = 0; i < len + 1; ++i) {
+        // 判断分隔符是否连续
+        if (p_cy[i] == sep) {
+            sep_cnt += 1;
+            p_cy[i] = '\0';
+            word_cnt -= 1;
+            continue;
         }
-    } while (*src2++);
+        // 若连续分隔符数量大于1等于3，则将多个分隔符视为1个，并存入列表
+        if (sep_cnt > 1) {
+            char *tmp = calloc(2, sizeof(char));
+            tmp[0] = sep;
+            tmp[1] = '\0';
+            *p_res++ = tmp;
+            word_cnt += 1;
+        }
+        sep_cnt = 0;
 
-    return tmp;
+        // 分词处理
+        int word_begin = i;
+        int word_end = word_begin;
+        int word_len = 0;
+        for (int k = 0;; ++k) {
+            if (p_cy[i + k] != sep && p_cy[i + k] != '\0') {
+                ++word_end;
+                continue;
+            }
+            word_len = word_end - word_begin;
+            if (word_len == 0) break;
+            p_cy[word_end] = '\0';
+
+            *p_res = calloc(word_len + 1, sizeof(char));
+            BA_STRCPY(*p_res, &p_cy[word_begin]);
+            p_res++;
+            i += word_len;
+            break;
+        }
+    }
+
+    res = realloc(res, sizeof(char *) * (word_cnt));
+    if (wn) *wn = word_cnt;
+    free(copy);
+    return res;
 }
 
-void str_split_free(char **buf) {
-    free((void *) &buf[0][0]);
+void str_split_free(char **buf, int cnt) {
+    for (int i = 0; i < cnt; ++i)
+        free(buf[i]);
     free(buf);
 }
 

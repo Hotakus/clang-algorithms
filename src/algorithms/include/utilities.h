@@ -41,7 +41,7 @@ char *str_chr(char ch, char *str);
 
 // str extra
 char **str_split(const char *src, char sep, int *wn);
-void str_split_free(char **buf);
+void str_split_free(char **buf, int cnt);
 char *rand_string(int len);
 char *str_conn(char *s1, char *s2);
 
