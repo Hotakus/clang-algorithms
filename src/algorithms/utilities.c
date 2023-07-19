@@ -30,7 +30,7 @@ int digits_len(long long int num) {
  */
 int get_digit(long long int num, unsigned char d) {
     for (int i = 0; i < d; ++i) num /= 10;
-    return (int) (num % 10);
+    return (int)(num % 10);
 }
 
 
@@ -42,9 +42,9 @@ int get_digit(long long int num, unsigned char d) {
 char *num_to_str(long long int num) {
     // TODO: 支持负数
     int len = digits_len(num);
-    char *buf = (char *) calloc(len, sizeof(char));
+    char *buf = (char *)calloc(len, sizeof(char));
     for (int i = len; i > 0; --i) {
-        buf[i - 1] = (char) (num % 10 + 48);
+        buf[i - 1] = (char)(num % 10 + 48);
         num /= 10;
     }
     buf[len] = '\0';
@@ -125,8 +125,7 @@ char *str_conn(char *s1, char *s2) {
 
 
 /**
- * 通过sep，实现对字符串的分割，并返回分割后字符串列表
- *
+ * @brief 通过sep，实现对字符串的分割，并返回分割后字符串列表
  * @param src 源待处理字符串
  * @param sep 分隔符
  * @param wn 词数
@@ -137,7 +136,7 @@ char **str_split(const char *src, char sep, int *wn) {
 
     int word_cnt = 0;
     int len = BA_STRLEN(src);
-    char *copy = calloc( len + 1, sizeof(char));
+    char *copy = calloc(len + 1, sizeof(char));
     char *p_cy = copy;
     BA_STRCPY(copy, src);
 
@@ -269,7 +268,7 @@ char *str_rev(char *str, bool copy) {
     char *buf = str;
     int len = BA_STRLEN(str);
     if (copy) {
-        buf = (char *) calloc(len + 1, sizeof(char));
+        buf = (char *)calloc(len + 1, sizeof(char));
         BA_STRCPY(buf, str);
     }
 

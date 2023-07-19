@@ -44,7 +44,7 @@ struct private {
  * @return 哈希表结构体
  */
 hash_table_t *hash_table_create(char *desc, size_t pre_size) {
-    hash_table_t *ht = (hash_table_t *) calloc(1, sizeof(hash_table_t));
+    hash_table_t *ht = (hash_table_t *)calloc(1, sizeof(hash_table_t));
     ht->cur_size = 0;
     ht->valid_size = 0;
     ht->collision_cnt = 0;
@@ -59,7 +59,7 @@ hash_table_t *hash_table_create(char *desc, size_t pre_size) {
 
     ht->valid_size = pre_size;
     ht->pri = calloc(1, sizeof(private));
-    ht->pri->map = (hash_table_map_elem_t *) calloc(ht->valid_size, sizeof(hash_table_map_elem_t));
+    ht->pri->map = (hash_table_map_elem_t *)calloc(ht->valid_size, sizeof(hash_table_map_elem_t));
     ht->pri->auto_rehash = false;
     ht->pri->rehash_method = HASH_TABLE_REHASH_COLLISION;
 
@@ -150,7 +150,7 @@ int hash_table_put(hash_table_t *ht, const char *key, void *value) {
 
     // calculate the hash code.
     int _hash_code = hash_code_fnv1a(key);
-    int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
+    int index = hash_limit(_hash_code, (int)ht->valid_size - 1);
 
     // determine whether entry was occupied.
     if (ht->pri->map[index].pair.name == NULL) {
@@ -191,7 +191,7 @@ int hash_table_put(hash_table_t *ht, const char *key, void *value) {
 ht_key_value_t *hash_table_get(hash_table_t *ht, char *key) {
     if (!key) return NULL;
     int _hash_code = hash_code_fnv1a(key);
-    int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
+    int index = hash_limit(_hash_code, (int)ht->valid_size - 1);
 
     if (ht->pri->map[index].pair.name == NULL) {
         hash_table_collision_entry_t *entry = ht->pri->map[index].entry;
@@ -218,7 +218,7 @@ void hash_table_remove(hash_table_t *ht, char *key) {
     if (!ht || !key) return;
 
     int _hash_code = hash_code_fnv1a(key);
-    int index = hash_limit(_hash_code, (int) ht->valid_size - 1);
+    int index = hash_limit(_hash_code, (int)ht->valid_size - 1);
 
     if (ht->pri->map[index].pair.name == NULL) {
         hash_table_collision_entry_t *entry = ht->pri->map[index].entry;
@@ -279,7 +279,7 @@ void hash_table_rehash(hash_table_t *ht, size_t new_size) {
 #endif
         hash_table_clear(ht);
         ht->valid_size = new_size;
-        ht->pri->map = (hash_table_map_elem_t *) calloc(ht->valid_size, sizeof(hash_table_map_elem_t));
+        ht->pri->map = (hash_table_map_elem_t *)calloc(ht->valid_size, sizeof(hash_table_map_elem_t));
         ht_key_value_t *probe = temp_entry->head->next_node;
         while (probe != temp_entry->tail) {
             ht->put(ht, probe->name, probe->data);
@@ -314,6 +314,7 @@ size_t get_times = 0;
 size_t get_times_tmp = 0;
 
 #if HASH_TEST == 1
+
 void hash_test(int tn) {
 
     int a = 996;
@@ -390,8 +391,8 @@ void hash_test(int tn) {
     total += res;
     printf("SingleGet elapsed time: %lld secs, %lld ms, %lld us (%s : %d - %s)\n",
            (res / 1000000), (res / 1000), res,
-           kv->name, *(int*)kv->data,
-           IS_TRUE(*(int*)kv->data == b));
+           kv->name, *(int *)kv->data,
+           IS_TRUE(*(int *)kv->data == b));
 
 
     // get test
@@ -410,7 +411,7 @@ void hash_test(int tn) {
 
     printf("Collision count: %zd, valid size: %zd (space utilization: %.2f%%)\n",
            ht->collision_cnt, ht->valid_size,
-           (((float)ht->cur_size - (float)ht->collision_cnt)/(float)ht->cur_size) * 100);
+           (((float)ht->cur_size - (float)ht->collision_cnt) / (float)ht->cur_size) * 100);
 
     // rehash test
 //    gettimeofday(&begin, NULL);
@@ -471,7 +472,7 @@ void hash_example() {
     ht_key_value_t *pair = NULL;
     pair = ht->get(ht, "hello_01");
     if (pair)
-        printf("Get -- key: %s, value: %d\n", pair->name, *(int*)pair->data);
+        printf("Get -- key: %s, value: %d\n", pair->name, *(int *)pair->data);
     else {
         printf("Get -- key: %s, failed.\n", key);
         return;
@@ -489,6 +490,7 @@ void hash_example() {
     hash_table_destroy(ht);
     printf("Destroy\n");
 }
+
 #endif
 
 void ht_poll(hash_table_t *ht) {
